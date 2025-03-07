@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Tilemaps;
 public static class Global
 {
-    public static float scale_background = 3.5f;
+    public static float scale_background = 4.0f;
     public static int grid_x = 10;
     public static int grid_y = 20;
 
@@ -38,16 +38,4 @@ public static class Global
         T,
         None,
     }
-
-    public static readonly Dictionary<Global.Piece_Type, Color> Piece_Color_Dict = new Dictionary<Global.Piece_Type, Color>()
-    {
-        {Global.Piece_Type.I, Color.cyan },
-        {Global.Piece_Type.O, Color.yellow },
-        {Global.Piece_Type.L, new Color(1.0f, 0.7f, 0.2f)},
-        {Global.Piece_Type.J, Color.blue },
-        {Global.Piece_Type.Z, Color.red },
-        {Global.Piece_Type.S, Color.green },
-        {Global.Piece_Type.T, new Color(0.5f, 0.1f, 0.6f) },
-        {Global.Piece_Type.None, new Color(0.7f, 0.7f, 0.7f) },
-    };
 }

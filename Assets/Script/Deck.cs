@@ -26,7 +26,6 @@ public class Deck : MonoBehaviour
         Assert.IsNotNull(t);
         return t;
     }
-
     public void Awake()
     {
         Current_Deck = new List<Piece>(Deck_Data);
