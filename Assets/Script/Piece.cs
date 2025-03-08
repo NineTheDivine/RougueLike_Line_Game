@@ -1,9 +1,12 @@
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class Piece : MonoBehaviour
 {
+    //State of Piece whether it can move
+    public bool piece_state;
+    //Position of Piece of mino (0,0)
+    public Vector2Int piece_pos;
     //Name of Piece
     public string piece_name;
     //number of minos in piece
@@ -17,6 +20,7 @@ public class Piece : MonoBehaviour
 
     private void Awake()
     {
+        this.piece_state = false;
         Assert.True(Global.Piece_Data.ContainsKey(this.piece_name));
         this.mino_list = Global.Piece_Data[this.piece_name];
         Assert.False(block_count == 0, "There is no mino in Piece");

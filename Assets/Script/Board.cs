@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static Global;
 
 public class Board : MonoBehaviour
 {
@@ -9,10 +10,20 @@ public class Board : MonoBehaviour
     public GameObject inner_horizontal_line;
     public GameObject inner_vertical_line;
 
+    public GameObject Deletion_Piece;
+
     public Deck deck;
 
     public Tilemap tile_board;
     private Vector3Int spawn_loc;
+
+    private Mino[,] grid_array;
+
+    private void Awake()
+    {
+        grid_array = new Mino[Global.grid_x, Global.grid_y];
+    }
+
     void Start()
     {
         float outer_grid_size = 0.25f / Global.scale_background;
@@ -54,13 +65,76 @@ public class Board : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
+            if (tile_board.transform.childCount != 0)
+            {
+                Transform t = tile_board.transform.GetChild(0);
+                t.transform.parent = Deletion_Piece.transform;
+                Clear_Piece(t.GetComponent<Piece>());
+            }
             Generate_Piece();
         }
+        if (tile_board.transform.childCount != 0)
+        {
+            Piece Current_Piece = tile_board.transform.GetChild(0).gameObject.GetComponent<Piece>();
+            Clear_Piece(Current_Piece);
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                if (Valid_Position(Current_Piece, Vector2Int.left))
+                {
+                    Current_Piece.piece_pos += Vector2Int.left;
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.D))
+            {
+                if (Valid_Position(Current_Piece, Vector2Int.right))
+                {
+                    Current_Piece.piece_pos += Vector2Int.right;
+                }
+            }
+            Set_Piece(Current_Piece);
+        }
     }
+
+    private void LateUpdate()
+    {
+        for(int i = 0; i < Deletion_Piece.transform.childCount; i++)
+            Destroy(Deletion_Piece.transform.GetChild(0).gameObject);
+    }
+
     public void Generate_Piece()
     {
         Piece p = Instantiate(deck.Pop_Piece(),tile_board.transform);
-        for(int i = 0; i < p.block_count; i++)
-            tile_board.SetTile(spawn_loc + (Vector3Int)p.mino_list[i].pos, p.mino_list[i].t_type);
+        p.piece_state = true;
+        p.piece_pos = (Vector2Int)spawn_loc;
+    }
+
+    public void Set_Piece(Piece p)
+    {
+        for (int i = 0; i < p.block_count; i++)
+            tile_board.SetTile((Vector3Int)p.piece_pos + (Vector3Int)p.mino_list[i].pos, p.mino_list[i].t_type);
+    }
+
+    public void Clear_Piece(Piece p)
+    {
+        for (int i = 0; i < p.block_count; i++)
+        {
+            tile_board.SetTile((Vector3Int)p.piece_pos + (Vector3Int)p.mino_list[i].pos, null);
+        }
+    }
+
+    public bool Valid_Position(Piece p, Vector2Int transition)
+    {
+        for (int i = 0; i < p.block_count; i++)
+        {
+            Vector2Int position = p.piece_pos + p.mino_list[i].pos + transition;
+            if (position.x < -Global.grid_x/2 || position.x >= Global.grid_x/2 || position.y < -Global.grid_y /2 || position.y >= Global.grid_y/2)
+                return false;
+            if (p.mino_list[i].m_type != Global.Mino_Type.Ghost)
+            {
+                if (grid_array[position.x + Global.grid_x/2,position.y + Global.grid_y/2] != null)
+                    return false;
+            }
+        }
+        return true;
     }
 }
