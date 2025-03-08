@@ -19,6 +19,8 @@ public class Board : MonoBehaviour
 
     private Mino[,] grid_array;
 
+    private Piece Current_Piece;
+
     private void Awake()
     {
         grid_array = new Mino[Global.grid_x, Global.grid_y];
@@ -59,6 +61,7 @@ public class Board : MonoBehaviour
             temp_v.transform.parent = in_parent;
         }
         this.GameObject().GetComponent<Transform>().localScale = new Vector3(Global.scale_background, Global.scale_background, 1.0f);
+        Generate_Piece();
     }
 
     private void Update()
@@ -67,45 +70,38 @@ public class Board : MonoBehaviour
         {
             if (tile_board.transform.childCount != 0)
             {
-                Transform t = tile_board.transform.GetChild(0);
-                t.transform.parent = Deletion_Piece.transform;
-                Clear_Piece(t.GetComponent<Piece>());
+                Clear_Piece(this.Current_Piece.piece_pos, this.Current_Piece.mino_list);
+                Destroy(tile_board.transform.GetChild(0).gameObject);
             }
             Generate_Piece();
         }
         if (tile_board.transform.childCount != 0)
         {
-            Piece Current_Piece = tile_board.transform.GetChild(0).gameObject.GetComponent<Piece>();
-            Clear_Piece(Current_Piece);
+            Clear_Piece(this.Current_Piece.piece_pos, this.Current_Piece.mino_list);
             if (Input.GetKeyDown(KeyCode.A))
             {
-                if (Valid_Position(Current_Piece, Vector2Int.left))
+                if (Valid_Position(this.Current_Piece, Vector2Int.left))
                 {
-                    Current_Piece.piece_pos += Vector2Int.left;
+                    this.Current_Piece.piece_pos += Vector2Int.left;
                 }
             }
             else if (Input.GetKeyDown(KeyCode.D))
             {
-                if (Valid_Position(Current_Piece, Vector2Int.right))
+                if (Valid_Position(this.Current_Piece, Vector2Int.right))
                 {
-                    Current_Piece.piece_pos += Vector2Int.right;
+                    this.Current_Piece.piece_pos += Vector2Int.right;
                 }
             }
-            Set_Piece(Current_Piece);
+            Set_Piece(this.Current_Piece);
         }
     }
 
-    private void LateUpdate()
-    {
-        for(int i = 0; i < Deletion_Piece.transform.childCount; i++)
-            Destroy(Deletion_Piece.transform.GetChild(0).gameObject);
-    }
 
     public void Generate_Piece()
     {
-        Piece p = Instantiate(deck.Pop_Piece(),tile_board.transform);
-        p.piece_state = true;
-        p.piece_pos = (Vector2Int)spawn_loc;
+        this.Current_Piece = Instantiate(deck.Pop_Piece(),tile_board.transform);
+        this.Current_Piece.piece_state = true;
+        this.Current_Piece.piece_pos = (Vector2Int)spawn_loc;
     }
 
     public void Set_Piece(Piece p)
@@ -114,11 +110,11 @@ public class Board : MonoBehaviour
             tile_board.SetTile((Vector3Int)p.piece_pos + (Vector3Int)p.mino_list[i].pos, p.mino_list[i].t_type);
     }
 
-    public void Clear_Piece(Piece p)
+    public void Clear_Piece(Vector2Int piece_pos, Mino[] mino_list)
     {
-        for (int i = 0; i < p.block_count; i++)
+        for (int i = 0; i < mino_list.Length; i++)
         {
-            tile_board.SetTile((Vector3Int)p.piece_pos + (Vector3Int)p.mino_list[i].pos, null);
+            tile_board.SetTile((Vector3Int)piece_pos + (Vector3Int)mino_list[i].pos, null);
         }
     }
 
@@ -137,4 +133,5 @@ public class Board : MonoBehaviour
         }
         return true;
     }
+
 }

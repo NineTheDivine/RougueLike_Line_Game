@@ -52,11 +52,4 @@ MonoBehaviour:
   - {fileID: 5445518646531797402, guid: 5c8007486b4c57a40a29ab573896a035, type: 3}
   - {fileID: 1414415843703269610, guid: c0dc4b262308cdc4ea1ca092060dbddd, type: 3}
   - {fileID: 6943560706871903592, guid: 9da0eff0ee18c5b4b8496b69a913d503, type: 3}
-  Current_Deck:
-  - {fileID: 7446374094820345302, guid: ed35a3727760ecc42ac8c093ae6c42f6, type: 3}
-  - {fileID: 6623416919954938991, guid: 8b19eeee95bc72542b133ae108a57031, type: 3}
-  - {fileID: 3222824993869254296, guid: e058055d7b202ec47a90ab8e99134b0d, type: 3}
-  - {fileID: 4241780899498914577, guid: 3ceddd404177e904bb07cb9e2f447826, type: 3}
-  - {fileID: 5445518646531797402, guid: 5c8007486b4c57a40a29ab573896a035, type: 3}
-  - {fileID: 1414415843703269610, guid: c0dc4b262308cdc4ea1ca092060dbddd, type: 3}
-  - {fileID: 6943560706871903592, guid: 9da0eff0ee18c5b4b8496b69a913d503, type: 3}
+  Current_Deck: []
