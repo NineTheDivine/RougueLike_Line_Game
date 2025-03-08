@@ -1,25 +1,25 @@
 using NUnit.Framework;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Piece : MonoBehaviour
 {
+    //Name of Piece
+    public string piece_name;
     //number of minos in piece
     public int block_count;
-    //list of mino in piece
+    //list of Mino in piece
     [SerializeField]
-    public Tile[] mino_list;
+    public Mino[] mino_list;
     //Type of Piece
-    [SerializeField]
-    public Vector3Int[] mino_pos;
-
     [SerializeField]
     public Global.Piece_Type piece_type;
 
-    private void Start()
+    private void Awake()
     {
-        if (!mino_list.Any())
-            Assert.True(true, "There is no mino in Piece");
+        Assert.True(Global.Piece_Data.ContainsKey(this.piece_name));
+        this.mino_list = Global.Piece_Data[this.piece_name];
+        Assert.False(block_count == 0, "There is no mino in Piece");
+        Assert.True(block_count == mino_list.Length, "Invalid Mino List Length");
     }
 }

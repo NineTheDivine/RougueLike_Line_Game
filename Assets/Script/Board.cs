@@ -61,6 +61,6 @@ public class Board : MonoBehaviour
     {
         Piece p = Instantiate(deck.Pop_Piece(),tile_board.transform);
         for(int i = 0; i < p.block_count; i++)
-            tile_board.SetTile(spawn_loc + p.mino_pos[i], p.mino_list[i]);
+            tile_board.SetTile(spawn_loc + (Vector3Int)p.mino_list[i].pos, p.mino_list[i].t_type);
     }
 }
