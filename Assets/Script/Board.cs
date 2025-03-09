@@ -1,5 +1,7 @@
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using static Global;
 
@@ -21,9 +23,14 @@ public class Board : MonoBehaviour
 
     private Piece Current_Piece;
 
+    private Vector2Int is_button_pressed;
+    private int counter;
+
     private void Awake()
     {
         grid_array = new Mino[Global.grid_x, Global.grid_y];
+        is_button_pressed = Vector2Int.zero;
+        counter = -Global.update_delay;
     }
 
     void Start()
@@ -62,6 +69,7 @@ public class Board : MonoBehaviour
         }
         this.GameObject().GetComponent<Transform>().localScale = new Vector3(Global.scale_background, Global.scale_background, 1.0f);
         Generate_Piece();
+        Set_Piece(this.Current_Piece);
     }
 
     private void Update()
@@ -74,25 +82,19 @@ public class Board : MonoBehaviour
                 Destroy(tile_board.transform.GetChild(0).gameObject);
             }
             Generate_Piece();
-        }
-        if (tile_board.transform.childCount != 0)
-        {
-            Clear_Piece(this.Current_Piece.piece_pos, this.Current_Piece.mino_list);
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                if (Valid_Position(this.Current_Piece, Vector2Int.left))
-                {
-                    this.Current_Piece.piece_pos += Vector2Int.left;
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.D))
-            {
-                if (Valid_Position(this.Current_Piece, Vector2Int.right))
-                {
-                    this.Current_Piece.piece_pos += Vector2Int.right;
-                }
-            }
             Set_Piece(this.Current_Piece);
+        }
+        if (this.is_button_pressed != Vector2Int.zero)
+        {
+            if ((this.counter == -Global.update_delay || this.counter == 0) && Valid_Position(this.Current_Piece, this.is_button_pressed))
+            {
+                Clear_Piece(this.Current_Piece.piece_pos, this.Current_Piece.mino_list);
+                this.Current_Piece.piece_pos += is_button_pressed;
+                Set_Piece(this.Current_Piece);
+            }
+            this.counter = (this.counter + 1);
+            if (this.counter >= Global.update_delay)
+                counter %= Global.update_delay;
         }
     }
 
@@ -134,4 +136,28 @@ public class Board : MonoBehaviour
         return true;
     }
 
+    public void Move_Left(InputAction.CallbackContext context)
+    {
+        if (context.started)
+            this.is_button_pressed += Vector2Int.left;
+        else if (context.canceled)
+        {
+            this.is_button_pressed -= Vector2Int.left;
+            if (this.is_button_pressed == Vector2Int.zero)
+                this.counter = -Global.update_delay;
+        }
+    }
+    
+
+    public void Move_Right(InputAction.CallbackContext context)
+    {
+        if (context.started)
+            this.is_button_pressed += Vector2Int.right;
+        else if (context.canceled)
+        {
+            this.is_button_pressed -= Vector2Int.right;
+            if(this.is_button_pressed == Vector2Int.zero)
+                this.counter = -Global.update_delay;
+        }
+    }
 }

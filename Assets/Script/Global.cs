@@ -7,7 +7,7 @@ public static class Global
     public static int grid_x = 10;
     public static int grid_y = 20;
 
-
+    public static int update_delay = 80;
     public static void Add_Grid_X(int dx)
     {
         int temp = grid_x + dx;

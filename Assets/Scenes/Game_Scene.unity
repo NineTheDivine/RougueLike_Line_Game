@@ -367,11 +367,19 @@ MonoBehaviour:
     m_ActionId: 9241bce8-39db-4865-b65e-ccca167ee6a8
     m_ActionName: 'UI/Back[/Keyboard/escape]'
   - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 69ff2536-7c51-4706-ba11-76b32747a380
+    m_ActionName: 'InGame/Hard_Drop[/Keyboard/w]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: dd5166bc-30cc-47b1-8da5-a153503246b4
+    m_ActionName: 'InGame/Soft_Drop[/Keyboard/s]'
+  - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 2149f4b9695164549a480a09783b9f47, type: 3}
-        m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
-        m_MethodName: set_name
-        m_Mode: 5
+      - m_Target: {fileID: 1294327731}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Move_Left
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -380,18 +388,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 69ff2536-7c51-4706-ba11-76b32747a380
-    m_ActionName: 'InGame/Hard_Drop[/Keyboard/w]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: dd5166bc-30cc-47b1-8da5-a153503246b4
-    m_ActionName: 'InGame/Soft_Drop[/Keyboard/s]'
-  - m_PersistentCalls:
-      m_Calls: []
     m_ActionId: 66fde3ff-0a19-4ee2-9758-4108f3bae535
     m_ActionName: 'InGame/Left[/Keyboard/a]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1294327731}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Move_Right
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: c167d99e-8527-4424-abe3-9de855501700
     m_ActionName: 'InGame/Right[/Keyboard/d]'
   - m_PersistentCalls:
@@ -419,6 +431,17 @@ MonoBehaviour:
   m_DefaultActionMap: InGame
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1294327731 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 468749329665502686, guid: 74daebfacfdafff47aafb15496f11bf0, type: 3}
+  m_PrefabInstance: {fileID: 955303254}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 475440430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2149f4b9695164549a480a09783b9f47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

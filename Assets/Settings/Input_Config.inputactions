@@ -7,9 +7,9 @@
             "actions": [
                 {
                     "name": "Move",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "7abcb70f-5dc3-4eb1-ab86-0c21db6e8665",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -124,11 +124,11 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Soft_Drop",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "dd5166bc-30cc-47b1-8da5-a153503246b4",
                     "expectedControlType": "",
                     "processors": "",
@@ -137,20 +137,20 @@
                 },
                 {
                     "name": "Left",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "66fde3ff-0a19-4ee2-9758-4108f3bae535",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": true
                 },
                 {
                     "name": "Right",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "c167d99e-8527-4424-abe3-9de855501700",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": true
                 },
                 {
@@ -160,7 +160,7 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Rotate_Right",
@@ -169,7 +169,7 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Hold",
@@ -178,7 +178,7 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Select",
@@ -204,7 +204,7 @@
                     "name": "",
                     "id": "fde1bed4-6565-4242-bbb7-73359647976f",
                     "path": "<Keyboard>/w",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": ";PC",
                     "action": "Hard_Drop",
@@ -215,7 +215,7 @@
                     "name": "",
                     "id": "c09b7526-59d1-44fc-9e8b-ca83cfdee3e9",
                     "path": "<Keyboard>/s",
-                    "interactions": "",
+                    "interactions": "Press,Hold(duration=1)",
                     "processors": "",
                     "groups": ";PC",
                     "action": "Soft_Drop",
