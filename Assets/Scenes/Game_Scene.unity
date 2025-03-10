@@ -423,11 +423,35 @@ MonoBehaviour:
     m_ActionId: c167d99e-8527-4424-abe3-9de855501700
     m_ActionName: 'InGame/Right[/Keyboard/d]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1294327731}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Rotate_Clockwise
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: c1ae4e65-2fc1-4996-9fe5-8290a90a8e40
     m_ActionName: 'InGame/Rotate_Left[/Keyboard/z]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1294327731}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Rotate_CounterClockwise
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 67695870-ac86-4a9f-bcc4-669aa84774dc
     m_ActionName: 'InGame/Rotate_Right[/Keyboard/x]'
   - m_PersistentCalls:

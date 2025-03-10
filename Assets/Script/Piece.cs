@@ -17,6 +17,8 @@ public class Piece : MonoBehaviour
     //Type of Piece
     [SerializeField]
     public Global.Piece_Type piece_type;
+    [SerializeField]
+    public int spin_index;
 
     private void Awake()
     {
@@ -25,5 +27,6 @@ public class Piece : MonoBehaviour
         this.mino_list = Global.Piece_Data[this.piece_name];
         Assert.False(block_count == 0, "There is no mino in Piece");
         Assert.True(block_count == mino_list.Length, "Invalid Mino List Length");
+        this.spin_index = 0;
     }
 }

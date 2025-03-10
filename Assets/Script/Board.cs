@@ -30,6 +30,9 @@ public class Board : MonoBehaviour
     private int y_counter;
     private bool is_down;
     private bool is_floor;
+    private bool moved_this_frame;
+    private bool spined_this_frame;
+
 
     private void Awake()
     {
@@ -40,6 +43,8 @@ public class Board : MonoBehaviour
         y_counter = 0;
         is_down = false;
         is_floor = false;
+        moved_this_frame = false;
+        spined_this_frame = false;
     }
 
     void Start()
@@ -86,7 +91,8 @@ public class Board : MonoBehaviour
 
     private void FixedUpdate()
     {
-        bool moved_this_frame = false;
+        this.moved_this_frame = false;
+        this.spined_this_frame = false;
         if (this.y_counter >= this.drop_speed)
         {
             this.y_counter = 0;
@@ -94,7 +100,7 @@ public class Board : MonoBehaviour
             {
                 Clear_Piece(this.Current_Piece.piece_pos, this.Current_Piece.mino_list);
                 this.Current_Piece.piece_pos += Vector2Int.down;
-                moved_this_frame = true;
+                this.moved_this_frame = true;
             }
             else 
                 this.is_floor = true;
@@ -111,16 +117,19 @@ public class Board : MonoBehaviour
             {
                 Clear_Piece(this.Current_Piece.piece_pos, this.Current_Piece.mino_list);
                 this.Current_Piece.piece_pos += x_axis;
-                moved_this_frame = true;
+                this.moved_this_frame = true;
             }
             this.x_counter++;
             if (this.x_counter >= Global.update_delay_x)
             {
-                print (this.x_counter);
                 this.x_counter = 0;
             }
         }
-        if (moved_this_frame)
+    }
+
+    private void LateUpdate()
+    {
+        if (this.moved_this_frame || this.spined_this_frame)
             Set_Piece(this.Current_Piece);
     }
 
@@ -170,6 +179,33 @@ public class Board : MonoBehaviour
         return true;
     }
 
+    public void Valid_Spin(Piece p, int spin)
+    {
+        int temp_spin = p.spin_index + spin;
+        int size = Global.Spin_Data[p.piece_name].Length / p.block_count;
+        if (temp_spin < 0)
+            temp_spin += size;
+        if (temp_spin >= size)
+            temp_spin %= size;
+        for (int i = 0; i < p.block_count; i++)
+        {
+            Vector2Int position = p.piece_pos + Global.Spin_Data[p.piece_name][temp_spin, i];
+            if (position.x < -Global.grid_x / 2 || position.x >= Global.grid_x / 2 || position.y < -Global.grid_y / 2 || position.y >= Global.grid_y / 2)
+                return;
+            if (p.mino_list[i].m_type != Global.Mino_Type.Ghost)
+            {
+                if (grid_array[position.x + Global.grid_x / 2, position.y + Global.grid_y / 2] != null)
+                    return;
+            }
+        }
+        this.spined_this_frame = true;
+        Clear_Piece(p.piece_pos, p.mino_list);
+        p.spin_index = temp_spin;
+        for (int i = 0; i < p.block_count; i++)
+            p.mino_list[i].pos = Global.Spin_Data[p.piece_name][temp_spin, i];
+        return;
+    }
+
     public void Move_Left(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -205,6 +241,19 @@ public class Board : MonoBehaviour
         else if (context.canceled)
             this.is_down = false;
     }
+
+    public void Rotate_Clockwise(InputAction.CallbackContext context)
+    {
+        if (context.started)
+            Valid_Spin(this.Current_Piece, 1);
+    }
+
+    public void Rotate_CounterClockwise(InputAction.CallbackContext context)
+    {
+        if (context.started)
+            Valid_Spin(this.Current_Piece, -1);
+    }
+
 
     //Debug Function
     public void Gen(InputAction.CallbackContext context)

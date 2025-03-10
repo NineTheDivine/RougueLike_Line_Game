@@ -121,6 +121,69 @@ public static class Global
         },
     };
 
+    public static readonly Dictionary<string, Vector2Int[,]> Spin_Data = new Dictionary<string, Vector2Int[,]>()
+    {
+        { "Tetromino_I",
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,1), new Vector2Int(-1,1), new Vector2Int(1,1), new Vector2Int(2,1) },
+                { new Vector2Int(1,1), new Vector2Int(1,2), new Vector2Int(1,0), new Vector2Int(1,-1) },
+                { new Vector2Int(1,0), new Vector2Int(2,0), new Vector2Int(0,0), new Vector2Int(-1,0) },
+                { new Vector2Int(0,0), new Vector2Int(0,-1), new Vector2Int(0,1), new Vector2Int(0,2) }
+            }
+        },
+        { "Tetromino_J",
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(-1,1), new Vector2Int(-1,0), new Vector2Int(1,0) },
+                { new Vector2Int(0,0), new Vector2Int(1,1), new Vector2Int(0,1), new Vector2Int(0,-1) },
+                { new Vector2Int(0,0), new Vector2Int(1,-1), new Vector2Int(1,0), new Vector2Int(-1,0) },
+                { new Vector2Int(0,0), new Vector2Int(-1,-1), new Vector2Int(0,-1), new Vector2Int(0,1) }
+            }
+        },
+        { "Tetromino_L",
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(1,1), new Vector2Int(1,0), new Vector2Int(-1,0) },
+                { new Vector2Int(0,0), new Vector2Int(1,-1), new Vector2Int(0,-1), new Vector2Int(0,1) },
+                { new Vector2Int(0,0), new Vector2Int(-1,-1), new Vector2Int(-1,0), new Vector2Int(1,0) },
+                { new Vector2Int(0,0), new Vector2Int(-1,1), new Vector2Int(0,1), new Vector2Int(0,-1) }
+            }
+        },
+        { "Tetromino_O",
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(1,1), new Vector2Int(0,1) }
+            }
+        },
+        { "Tetromino_S",
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(0,1), new Vector2Int(1,1) },
+                { new Vector2Int(0,0), new Vector2Int(0,1), new Vector2Int(1,0), new Vector2Int(1,-1) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(0,-1), new Vector2Int(-1,-1) },
+                { new Vector2Int(0,0), new Vector2Int(0,-1), new Vector2Int(-1,0), new Vector2Int(-1,1) }
+            }
+        },
+        { "Tetromino_T",
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(0,1), new Vector2Int(-1,0), new Vector2Int(1,0) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(0,1), new Vector2Int(0,-1) },
+                { new Vector2Int(0,0), new Vector2Int(0,-1), new Vector2Int(1,0), new Vector2Int(-1,0) },
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(0,-1), new Vector2Int(0,1) }
+            }
+        },
+        { "Tetromino_Z",
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(-1,1), new Vector2Int(0,1), new Vector2Int(1,0) },
+                { new Vector2Int(0,0), new Vector2Int(1,1), new Vector2Int(1,0), new Vector2Int(0,-1) },
+                { new Vector2Int(0,0), new Vector2Int(1,-1), new Vector2Int(0,-1), new Vector2Int(-1,0) },
+                { new Vector2Int(0,0), new Vector2Int(-1,-1), new Vector2Int(-1,0), new Vector2Int(0,1) }
+            }
+        },
+    };
 
 
 

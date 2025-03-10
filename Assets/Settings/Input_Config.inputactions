@@ -154,21 +154,21 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Rotate_Left",
+                    "name": "Rotate_Clockwise",
                     "type": "Button",
                     "id": "c1ae4e65-2fc1-4996-9fe5-8290a90a8e40",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Rotate_Right",
+                    "name": "Rotate_CounterClockwise",
                     "type": "Button",
                     "id": "67695870-ac86-4a9f-bcc4-669aa84774dc",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": true
                 },
                 {
@@ -251,7 +251,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";PC",
-                    "action": "Rotate_Left",
+                    "action": "Rotate_Clockwise",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -262,7 +262,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";PC",
-                    "action": "Rotate_Right",
+                    "action": "Rotate_CounterClockwise",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

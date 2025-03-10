@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 public class Mino
 {
     public Global.Mino_Type m_type { get; private set; }
-    public Vector2Int pos { get; private set; }
+    public Vector2Int pos { get; set; }
     public Global.Piece_Type p_type { get; private set; }
 
     public Tile t_type { get; private set; }
