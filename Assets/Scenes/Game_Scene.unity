@@ -270,6 +270,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 468749329665502686, guid: 74daebfacfdafff47aafb15496f11bf0, type: 3}
+      propertyPath: level
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 468749329665502686, guid: 74daebfacfdafff47aafb15496f11bf0, type: 3}
       propertyPath: spawn_loc.y
       value: 8
       objectReference: {fileID: 0}
@@ -371,7 +375,19 @@ MonoBehaviour:
     m_ActionId: 69ff2536-7c51-4706-ba11-76b32747a380
     m_ActionName: 'InGame/Hard_Drop[/Keyboard/w]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1294327731}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Move_Down
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: dd5166bc-30cc-47b1-8da5-a153503246b4
     m_ActionName: 'InGame/Soft_Drop[/Keyboard/s]'
   - m_PersistentCalls:
@@ -426,6 +442,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: a4d48893-b19f-4b23-a86c-3ca05a883137
     m_ActionName: 'InGame/Back[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1294327731}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Gen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 7d0149af-b04d-4160-bf5c-e58ba2d7b4b6
+    m_ActionName: 'Debug/GeneratePiece[/Keyboard/r]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: PC
   m_DefaultActionMap: InGame
