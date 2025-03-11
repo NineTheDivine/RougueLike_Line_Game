@@ -2,6 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 using static Global;
 
 public class Board : MonoBehaviour
@@ -22,6 +23,7 @@ public class Board : MonoBehaviour
 
     private Piece Current_Piece;
 
+    private bool is_game;
     public int level;
     private int max_level;
     private int drop_speed;
@@ -29,20 +31,21 @@ public class Board : MonoBehaviour
     private int x_counter;
     private int y_counter;
     private bool is_down;
-    private bool is_floor;
+    private int is_floor;
     private bool moved_this_frame;
     private bool spined_this_frame;
 
 
     private void Awake()
     {
+        this.is_game = true;
         grid_array = new Mino[Global.grid_x, Global.grid_y];
         max_level = 5;
         x_axis = Vector2Int.zero;
         x_counter = -Global.update_delay_x;
         y_counter = 0;
         is_down = false;
-        is_floor = false;
+        is_floor = -1;
         moved_this_frame = false;
         spined_this_frame = false;
     }
@@ -91,46 +94,62 @@ public class Board : MonoBehaviour
 
     private void FixedUpdate()
     {
-        this.moved_this_frame = false;
-        this.spined_this_frame = false;
-        if (this.y_counter >= this.drop_speed)
+        if (this.is_game)
         {
-            this.y_counter = 0;
-            if (Valid_Position(this.Current_Piece, Vector2Int.down))
+            this.moved_this_frame = false;
+            this.spined_this_frame = false;
+            if (this.is_floor == -1 && this.y_counter >= this.drop_speed)
             {
-                Clear_Piece(this.Current_Piece.piece_pos, this.Current_Piece.mino_list);
-                this.Current_Piece.piece_pos += Vector2Int.down;
-                this.moved_this_frame = true;
+                this.y_counter = 0;
+                if (Valid_Position(this.Current_Piece, Vector2Int.down))
+                {
+                    Clear_Piece(this.Current_Piece.piece_pos, this.Current_Piece.mino_list);
+                    this.Current_Piece.piece_pos += Vector2Int.down;
+                    this.moved_this_frame = true;
+                }
+                else
+                    this.is_floor = 0;
             }
-            else 
-                this.is_floor = true;
-        }
 
-        if (this.is_down)
-            this.y_counter += max_level;
-        else
-            this.y_counter++;
+            if (this.x_axis != Vector2Int.zero)
+            {
+                if ((this.x_counter == -Global.update_delay_x || this.x_counter == 0) && Valid_Position(this.Current_Piece, this.x_axis))
+                {
+                    Clear_Piece(this.Current_Piece.piece_pos, this.Current_Piece.mino_list);
+                    this.Current_Piece.piece_pos += x_axis;
+                    this.moved_this_frame = true;
+                }
+                this.x_counter++;
+                if (this.x_counter >= Global.update_delay_x)
+                {
+                    this.x_counter = 0;
+                }
+            }
 
-        if (this.x_axis != Vector2Int.zero)
-        {
-            if ((this.x_counter == -Global.update_delay_x || this.x_counter == 0) && Valid_Position(this.Current_Piece, this.x_axis))
+            if (this.is_floor >= 0)
             {
-                Clear_Piece(this.Current_Piece.piece_pos, this.Current_Piece.mino_list);
-                this.Current_Piece.piece_pos += x_axis;
-                this.moved_this_frame = true;
+                if (Valid_Position(this.Current_Piece, Vector2Int.down))
+                    this.is_floor = -1;
+                else
+                    this.is_floor++;
             }
-            this.x_counter++;
-            if (this.x_counter >= Global.update_delay_x)
-            {
-                this.x_counter = 0;
-            }
+
+            else if (this.is_down)
+                this.y_counter += max_level;
+            else
+                this.y_counter++;
         }
     }
 
     private void LateUpdate()
     {
-        if (this.moved_this_frame || this.spined_this_frame)
-            Set_Piece(this.Current_Piece);
+        if (this.is_game)
+        {
+            if (this.moved_this_frame || this.spined_this_frame)
+                Set_Piece(this.Current_Piece);
+            if (this.is_floor >= Global.floor_delay)
+                Stop_Piece(this.Current_Piece);
+        }
     }
 
     public bool Level_Up()
@@ -144,9 +163,22 @@ public class Board : MonoBehaviour
 
     public void Generate_Piece()
     {
-        this.Current_Piece = Instantiate(deck.Pop_Piece(),tile_board.transform);
-        this.Current_Piece.piece_state = true;
-        this.Current_Piece.piece_pos = (Vector2Int)spawn_loc;
+        if (this.is_game)
+        {
+            this.Current_Piece = Instantiate(deck.Pop_Piece(), tile_board.transform);
+            this.Current_Piece.piece_state = true;
+            this.Current_Piece.piece_pos = (Vector2Int)spawn_loc;
+
+            if (Valid_Position(this.Current_Piece, Vector2Int.zero) == false)
+            {
+                print("GameOver");
+                this.is_game = false;
+            }
+            else
+            {
+                Set_Piece(this.Current_Piece);
+            }
+        }
     }
 
     public void Set_Piece(Piece p)
@@ -161,6 +193,20 @@ public class Board : MonoBehaviour
         {
             tile_board.SetTile((Vector3Int)piece_pos + (Vector3Int)mino_list[i].pos, null);
         }
+
+    }
+    public void Stop_Piece(Piece p)
+    {
+        for (int i = 0; i < p.block_count; i++)
+        {
+            Vector2Int position = p.piece_pos + p.mino_list[i].pos + new Vector2Int(Global.grid_x / 2, Global.grid_y / 2);
+            if (this.grid_array[position.x, position.y] == null)
+                this.grid_array[position.x, position.y] = p.mino_list[i];
+        }
+        if (tile_board.transform.childCount != 0)
+            Destroy(tile_board.transform.GetChild(0).gameObject);
+        Generate_Piece();
+        this.is_floor = -1;
     }
 
     public bool Valid_Position(Piece p, Vector2Int transition)
@@ -208,9 +254,9 @@ public class Board : MonoBehaviour
 
     public void Move_Left(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (this.is_game && context.started)
             this.x_axis += Vector2Int.left;
-        else if (context.canceled)
+        else if (this.is_game && context.canceled)
         {
             this.x_axis -= Vector2Int.left;
             if (this.x_axis == Vector2Int.zero)
@@ -221,9 +267,9 @@ public class Board : MonoBehaviour
 
     public void Move_Right(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (this.is_game && context.started)
             this.x_axis += Vector2Int.right;
-        else if (context.canceled)
+        else if (this.is_game && context.canceled)
         {
             this.x_axis -= Vector2Int.right;
             if(this.x_axis == Vector2Int.zero)
@@ -233,32 +279,44 @@ public class Board : MonoBehaviour
 
     public void Move_Down(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (this.is_game && context.started)
         {
             this.y_counter = this.drop_speed;
             this.is_down = true;
         }
-        else if (context.canceled)
+        else if (this.is_game && context.canceled)
             this.is_down = false;
+    }
+
+    public void Hard_Drop(InputAction.CallbackContext context)
+    {
+        if (this.is_game && context.started)
+        {
+            Clear_Piece(this.Current_Piece.piece_pos, this.Current_Piece.mino_list);
+            while (Valid_Position(this.Current_Piece, Vector2Int.down))
+                this.Current_Piece.piece_pos += Vector2Int.down;
+            this.moved_this_frame = true;
+            this.is_floor = Global.floor_delay;
+        }
     }
 
     public void Rotate_Clockwise(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (this.is_game && context.started)
             Valid_Spin(this.Current_Piece, 1);
     }
 
     public void Rotate_CounterClockwise(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (this.is_game && context.started)
             Valid_Spin(this.Current_Piece, -1);
     }
-
+    
 
     //Debug Function
     public void Gen(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (this.is_game && context.started)
         {
             this.drop_speed = Global.update_delay_y / (this.level * 2);
             if (tile_board.transform.childCount != 0)
@@ -269,7 +327,7 @@ public class Board : MonoBehaviour
             Generate_Piece();
             Set_Piece(this.Current_Piece);
             this.y_counter = 0;
-            this.is_floor = false;
+            this.is_floor = -1;
         }
     }
 }

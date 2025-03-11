@@ -371,7 +371,19 @@ MonoBehaviour:
     m_ActionId: 9241bce8-39db-4865-b65e-ccca167ee6a8
     m_ActionName: 'UI/Back[/Keyboard/escape]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1294327731}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Hard_Drop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 69ff2536-7c51-4706-ba11-76b32747a380
     m_ActionName: 'InGame/Hard_Drop[/Keyboard/w]'
   - m_PersistentCalls:

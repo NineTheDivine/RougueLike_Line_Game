@@ -123,7 +123,7 @@
                     "id": "69ff2536-7c51-4706-ba11-76b32747a380",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": true
                 },
                 {
@@ -204,7 +204,7 @@
                     "name": "",
                     "id": "fde1bed4-6565-4242-bbb7-73359647976f",
                     "path": "<Keyboard>/w",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": ";PC",
                     "action": "Hard_Drop",
