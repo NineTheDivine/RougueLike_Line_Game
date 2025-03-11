@@ -124,6 +124,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4301259407460607520, guid: 74daebfacfdafff47aafb15496f11bf0, type: 3}
   m_PrefabInstance: {fileID: 955303254}
   m_PrefabAsset: {fileID: 0}
+--- !u!1839735485 &593368251 stripped
+Tilemap:
+  m_CorrespondingSourceObject: {fileID: 1621428071942784513, guid: 74daebfacfdafff47aafb15496f11bf0, type: 3}
+  m_PrefabInstance: {fileID: 955303254}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &712615980
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,9 +275,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 468749329665502686, guid: 74daebfacfdafff47aafb15496f11bf0, type: 3}
+      propertyPath: deck
+      value: 
+      objectReference: {fileID: 857135409828544012, guid: 9d968fbe6ebd6b5489c9c8b10df138da, type: 3}
+    - target: {fileID: 468749329665502686, guid: 74daebfacfdafff47aafb15496f11bf0, type: 3}
       propertyPath: level
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 468749329665502686, guid: 74daebfacfdafff47aafb15496f11bf0, type: 3}
+      propertyPath: tile_board
+      value: 
+      objectReference: {fileID: 593368251}
     - target: {fileID: 468749329665502686, guid: 74daebfacfdafff47aafb15496f11bf0, type: 3}
       propertyPath: spawn_loc.y
       value: 8

@@ -22,11 +22,15 @@ public class Piece : MonoBehaviour
 
     private void Awake()
     {
+        this.spin_index = 0;
         this.piece_state = false;
         Assert.True(Global.Piece_Data.ContainsKey(this.piece_name));
         this.mino_list = Global.Piece_Data[this.piece_name];
         Assert.False(block_count == 0, "There is no mino in Piece");
         Assert.True(block_count == mino_list.Length, "Invalid Mino List Length");
-        this.spin_index = 0;
+        for (int i = 0; i < this.block_count; i++)
+        {
+            this.mino_list[i].pos = Global.Spin_Data[this.piece_name][this.spin_index,i];
+        }
     }
 }
