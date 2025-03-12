@@ -235,6 +235,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8618687988024988460}
   - component: {fileID: 468749329665502686}
+  - component: {fileID: 4630611448728454368}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -260,6 +261,7 @@ Transform:
   - {fileID: 4930180885664306825}
   - {fileID: 2825976877240600621}
   - {fileID: 4152887964716144416}
+  - {fileID: 4825462460611264827}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &468749329665502686
@@ -280,7 +282,186 @@ MonoBehaviour:
   inner_vertical_line: {fileID: 4300450629718872363, guid: c17b91b5d0cce1541b0e513b9da58009, type: 3}
   deck: {fileID: 857135409828544012, guid: 9d968fbe6ebd6b5489c9c8b10df138da, type: 3}
   tile_board: {fileID: 1621428071942784513}
-  spawn_loc: {x: 0, y: 0, z: 0}
+  hold_board: {fileID: 4305958624826841221}
+  level: 1
+--- !u!114 &4630611448728454368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4301259407460607520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 6ec583ef1c2922e4b8d7a22cd0b572ca, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7abcb70f-5dc3-4eb1-ab86-0c21db6e8665
+    m_ActionName: 'UI/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c9accf8b-36d3-47e4-8da8-e44940ed7afd
+    m_ActionName: 'UI/Select[/Keyboard/enter]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9241bce8-39db-4865-b65e-ccca167ee6a8
+    m_ActionName: 'UI/Back[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 468749329665502686}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Hard_Drop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 69ff2536-7c51-4706-ba11-76b32747a380
+    m_ActionName: 'InGame/Hard_Drop[/Keyboard/w]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 468749329665502686}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Move_Down
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: dd5166bc-30cc-47b1-8da5-a153503246b4
+    m_ActionName: 'InGame/Soft_Drop[/Keyboard/s]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 468749329665502686}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Move_Left
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 66fde3ff-0a19-4ee2-9758-4108f3bae535
+    m_ActionName: 'InGame/Left[/Keyboard/a]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 468749329665502686}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Move_Right
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: c167d99e-8527-4424-abe3-9de855501700
+    m_ActionName: 'InGame/Right[/Keyboard/d]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 468749329665502686}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Rotate_Clockwise
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: c1ae4e65-2fc1-4996-9fe5-8290a90a8e40
+    m_ActionName: 'InGame/Rotate_Left[/Keyboard/z]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 468749329665502686}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Rotate_CounterClockwise
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 67695870-ac86-4a9f-bcc4-669aa84774dc
+    m_ActionName: 'InGame/Rotate_Right[/Keyboard/x]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 468749329665502686}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Hold
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 243bbd2d-ba3f-4110-91f0-cd8c10c5c899
+    m_ActionName: 'InGame/Hold[/Keyboard/space]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1702b45e-f2a2-4244-952d-f34a1e85abb0
+    m_ActionName: 'InGame/Select[/Keyboard/enter]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a4d48893-b19f-4b23-a86c-3ca05a883137
+    m_ActionName: 'InGame/Back[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 468749329665502686}
+        m_TargetAssemblyTypeName: Board, Assembly-CSharp
+        m_MethodName: Gen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 7d0149af-b04d-4160-bf5c-e58ba2d7b4b6
+    m_ActionName: 'Debug/GeneratePiece[/Keyboard/r]'
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: PC
+  m_DefaultActionMap: InGame
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &8474359070984728009
 GameObject:
   m_ObjectHideFlags: 0
@@ -404,3 +585,75 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!1001 &1709684287809300185
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8618687988024988460}
+    m_Modifications:
+    - target: {fileID: 6146701315138856930, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146701315138856930, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146701315138856930, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146701315138856930, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146701315138856930, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146701315138856930, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146701315138856930, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146701315138856930, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146701315138856930, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146701315138856930, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6705893355762198116, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_Name
+      value: Hold_Board
+      objectReference: {fileID: 0}
+    - target: {fileID: 8226142211273158505, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3791159561803766246, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+--- !u!1839735485 &4305958624826841221 stripped
+Tilemap:
+  m_CorrespondingSourceObject: {fileID: 3205386745120423516, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+  m_PrefabInstance: {fileID: 1709684287809300185}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4825462460611264827 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6146701315138856930, guid: c11609943fd4f3245ae8536f115fa397, type: 3}
+  m_PrefabInstance: {fileID: 1709684287809300185}
+  m_PrefabAsset: {fileID: 0}

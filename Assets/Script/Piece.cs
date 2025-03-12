@@ -22,7 +22,13 @@ public class Piece : MonoBehaviour
 
     private void Awake()
     {
+        Reset();
+    }
+
+    public void Reset()
+    {
         this.spin_index = 0;
+        this.piece_pos = Vector2Int.zero;
         this.piece_state = false;
         Assert.True(Global.Piece_Data.ContainsKey(this.piece_name));
         this.mino_list = Global.Piece_Data[this.piece_name];
@@ -30,7 +36,7 @@ public class Piece : MonoBehaviour
         Assert.True(block_count == mino_list.Length, "Invalid Mino List Length");
         for (int i = 0; i < this.block_count; i++)
         {
-            this.mino_list[i].pos = Global.Spin_Data[this.piece_name][this.spin_index,i];
+            this.mino_list[i].pos = Global.Spin_Data[this.piece_name][this.spin_index, i];
         }
     }
 }

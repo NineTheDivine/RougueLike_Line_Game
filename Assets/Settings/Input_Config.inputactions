@@ -177,7 +177,7 @@
                     "id": "243bbd2d-ba3f-4110-91f0-cd8c10c5c899",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": true
                 },
                 {

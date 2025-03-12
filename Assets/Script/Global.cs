@@ -10,6 +10,8 @@ public static class Global
     public static int update_delay_x = 5;
     public static int update_delay_y = 40;
     public static int floor_delay = 40;
+
+    public static int is_hold_count = 1;
     public static void Add_Grid_X(int dx)
     {
         int temp = grid_x + dx;
