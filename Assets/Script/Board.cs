@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.HID;
 using UnityEngine.Tilemaps;
 using static Global;
 
@@ -18,6 +17,7 @@ public class Board : MonoBehaviour
 
     public Tilemap tile_board;
     public Tilemap hold_board;
+    public GameObject next_board;
     private Vector3Int spawn_loc;
 
     private Mino[,] grid_array;
@@ -50,7 +50,6 @@ public class Board : MonoBehaviour
         is_holdable = Global.is_hold_count;
         moved_this_frame = false;
         spined_this_frame = false;
-
     }
 
     void Start()
@@ -90,6 +89,7 @@ public class Board : MonoBehaviour
             temp_v.GetComponent<Transform>().localScale = new Vector3(inner_grid_size, Global.grid_y , 1);
             temp_v.transform.parent = in_parent;
         }
+        Refresh_Next();
         this.GameObject().GetComponent<Transform>().localScale = new Vector3(Global.scale_background, Global.scale_background, 1.0f);
         this.Current_Piece = null;
         this.Hold_Pieces = new List<Piece>();
@@ -193,6 +193,7 @@ public class Board : MonoBehaviour
             this.Current_Piece.piece_state = true;
             this.Current_Piece.piece_pos = (Vector2Int)spawn_loc;
             this.Current_Piece.spin_index = 0;
+            Refresh_Next();
             if (Valid_Position(Vector2Int.zero) == false)
             {
                 print("GameOver");
@@ -262,6 +263,34 @@ public class Board : MonoBehaviour
                     tile_board.SetTile(new Vector3Int(i, j, 0) - global_idx, this.grid_array[i, j].t_type);
                 else
                     tile_board.SetTile(new Vector3Int(i, j, 0) - global_idx, null);
+            }
+        }
+    }
+
+    public void Refresh_Next()
+    {
+        for (int i = 0; i < this.next_board.transform.childCount; i++)
+        {
+            GameObject child_tile = this.next_board.transform.GetChild(i).GetChild(0).GetChild(0).gameObject;
+            if (child_tile.transform.childCount != 0)
+            {
+                Clear_Mino(child_tile.transform.GetChild(0).GetComponent<Piece>().mino_list, false, child_tile.GetComponent<Tilemap>());
+                Destroy(child_tile.transform.GetChild(0).gameObject);
+            }
+
+            if (i == this.deck.Current_Deck.Count)
+            {
+                this.next_board.transform.GetChild(i).GetChild(3).gameObject.SetActive(true);
+            }
+            else if (i < this.deck.Current_Deck.Count)
+            {
+                this.next_board.transform.GetChild(i).GetChild(3).gameObject.SetActive(false);
+                Piece p = Instantiate(this.deck.Current_Deck[i], child_tile.transform);
+                Set_Mino(p.mino_list, false, child_tile.GetComponent<Tilemap>());
+            }
+            else
+            {
+                this.next_board.transform.GetChild(i).GetChild(3).gameObject.SetActive(false);
             }
         }
     }
