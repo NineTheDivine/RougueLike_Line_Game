@@ -336,28 +336,44 @@ public class Board : MonoBehaviour
     public void Valid_Spin(int spin)
     {
         int temp_spin = this.Current_Piece.spin_index + spin;
-        int size = Global.Spin_Data[this.Current_Piece.piece_name].Length / this.Current_Piece.block_count;
+        int size = Global.Spin_Data[this.Current_Piece.piece_name].GetLength(0);
         if (temp_spin < 0)
             temp_spin += size;
         if (temp_spin >= size)
             temp_spin %= size;
-        for (int i = 0; i < this.Current_Piece.block_count; i++)
+        Vector2Int wallkick;
+        for (int j = 0; j < Global.Wallkick_Data[this.Current_Piece.piece_type].GetLength(1); j++)
         {
-            Vector2Int position = this.Current_Piece.piece_pos + Global.Spin_Data[this.Current_Piece.piece_name][temp_spin, i];
-            if (position.x < -Global.grid_x / 2 || position.x >= Global.grid_x / 2 || position.y < -Global.grid_y / 2 || position.y >= Global.grid_y / 2)
-                return;
-            if (this.Current_Piece.mino_list[i].m_type != Global.Mino_Type.Ghost)
+            bool is_spin = true;
+            wallkick = Global.Wallkick_Data[this.Current_Piece.piece_type][this.Current_Piece.spin_index, j] * spin;
+            for (int i = 0; i < this.Current_Piece.block_count; i++)
             {
-                if (grid_array[position.x + Global.grid_x / 2, position.y + Global.grid_y / 2] != null)
-                    return;
+                Vector2Int position = this.Current_Piece.piece_pos + Global.Spin_Data[this.Current_Piece.piece_name][temp_spin, i] + wallkick;
+                if (position.x < -Global.grid_x / 2 || position.x >= Global.grid_x / 2 || position.y < -Global.grid_y / 2 || position.y >= Global.grid_y / 2)
+                {
+                    is_spin = false;
+                    break;
+                }
+                if (this.Current_Piece.mino_list[i].m_type != Global.Mino_Type.Ghost)
+                {
+                    if (grid_array[position.x + Global.grid_x / 2, position.y + Global.grid_y / 2] != null)
+                    {
+                        is_spin = false;
+                        break;
+                    }
+                }
+            }
+            if (is_spin)
+            {
+                this.spined_this_frame = true;
+                Clear_Mino(this.Current_Piece.mino_list, true, this.tile_board);
+                this.Current_Piece.piece_pos += wallkick;
+                this.Current_Piece.spin_index = temp_spin;
+                for (int i = 0; i < this.Current_Piece.block_count; i++)
+                    this.Current_Piece.mino_list[i].pos = Global.Spin_Data[this.Current_Piece.piece_name][temp_spin, i];
+                return;
             }
         }
-        this.spined_this_frame = true;
-        Clear_Mino(this.Current_Piece.mino_list, true, this.tile_board);
-        this.Current_Piece.spin_index = temp_spin;
-        for (int i = 0; i < this.Current_Piece.block_count; i++)
-            this.Current_Piece.mino_list[i].pos = Global.Spin_Data[this.Current_Piece.piece_name][temp_spin, i];
-        return;
     }
 
     public void Move_Left(InputAction.CallbackContext context)

@@ -188,6 +188,85 @@ public static class Global
         },
     };
 
+    public static readonly Dictionary<Piece_Type, Vector2Int[,]> Wallkick_Data = new Dictionary<Piece_Type, Vector2Int[,]>()
+    {
+        { Piece_Type.I,
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(-2,0), new Vector2Int(1,0), new Vector2Int(-2,-1), new Vector2Int(1,2) },
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(2,0), new Vector2Int(-1,2), new Vector2Int(2,-1) },
+                { new Vector2Int(0,0), new Vector2Int(2,0), new Vector2Int(-1,0), new Vector2Int(2,1), new Vector2Int(-1,-2) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(-2,0), new Vector2Int(1,-2), new Vector2Int(-2,1) },
+            }
+        },
+        { Piece_Type.None,
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0)},
+                { new Vector2Int(0,0)},
+                { new Vector2Int(0,0)},
+                { new Vector2Int(0,0)},
+            }
+        },
 
+        { Piece_Type.O,
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0)},
+                { new Vector2Int(0,0)},
+                { new Vector2Int(0,0)},
+                { new Vector2Int(0,0)},
+            }
+        },
 
+        { Piece_Type.J,
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(-1,1), new Vector2Int(0,-2), new Vector2Int(-1,-2) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(1,-1), new Vector2Int(0,2), new Vector2Int(1,2) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(1,1), new Vector2Int(0,-2), new Vector2Int(1,-2) },
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(-1,-1), new Vector2Int(0,2), new Vector2Int(-1,2) },
+            }
+        },
+
+        { Piece_Type.L,
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(-1,1), new Vector2Int(0,-2), new Vector2Int(-1,-2) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(1,-1), new Vector2Int(0,2), new Vector2Int(1,2) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(1,1), new Vector2Int(0,-2), new Vector2Int(1,-2) },
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(-1,-1), new Vector2Int(0,2), new Vector2Int(-1,2) },
+            }
+        },
+
+        { Piece_Type.S,
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(-1,1), new Vector2Int(0,-2), new Vector2Int(-1,-2) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(1,-1), new Vector2Int(0,2), new Vector2Int(1,2) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(1,1), new Vector2Int(0,-2), new Vector2Int(1,-2) },
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(-1,-1), new Vector2Int(0,2), new Vector2Int(-1,2) },
+            }
+        },
+
+        { Piece_Type.T,
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(-1,1), new Vector2Int(0,-2), new Vector2Int(-1,-2) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(1,-1), new Vector2Int(0,2), new Vector2Int(1,2) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(1,1), new Vector2Int(0,-2), new Vector2Int(1,-2) },
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(-1,-1), new Vector2Int(0,2), new Vector2Int(-1,2) },
+            }
+        },
+
+        { Piece_Type.Z,
+            new Vector2Int[,]
+            {
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(-1,1), new Vector2Int(0,-2), new Vector2Int(-1,-2) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(1,-1), new Vector2Int(0,2), new Vector2Int(1,2) },
+                { new Vector2Int(0,0), new Vector2Int(1,0), new Vector2Int(1,1), new Vector2Int(0,-2), new Vector2Int(1,-2) },
+                { new Vector2Int(0,0), new Vector2Int(-1,0), new Vector2Int(-1,-1), new Vector2Int(0,2), new Vector2Int(-1,2) },
+            }
+        },
+    };
 }
