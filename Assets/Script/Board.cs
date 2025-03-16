@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
 using UnityEngine.Tilemaps;
 using static Global;
 
@@ -89,7 +89,7 @@ public class Board : MonoBehaviour
             temp_v.GetComponent<Transform>().localScale = new Vector3(inner_grid_size, Global.grid_y , 1);
             temp_v.transform.parent = in_parent;
         }
-        Refresh_Next();
+        Refresh_Next(true);
         this.GameObject().GetComponent<Transform>().localScale = new Vector3(Global.scale_background, Global.scale_background, 1.0f);
         this.Current_Piece = null;
         this.Hold_Pieces = new List<Piece>();
@@ -179,21 +179,29 @@ public class Board : MonoBehaviour
     public bool Level_Up()
     {
         this.level++;
+        this.deck.Reload_Count += Global.base_reload_count;
         if (this.level > this.max_level)
             return true;
         this.drop_speed = Global.update_delay_y  / (this.level*2);
+        Refresh_Next(false);
         return false;
     }
 
     public void Generate_Piece(Piece p)
     {
+        if (p == null)
+        {
+            print("GameOver");
+            this.is_game = false;
+            return;
+        }
         if (this.is_game)
         {
             this.Current_Piece = Instantiate(p, tile_board.transform);
             this.Current_Piece.piece_state = true;
             this.Current_Piece.piece_pos = (Vector2Int)spawn_loc;
             this.Current_Piece.spin_index = 0;
-            Refresh_Next();
+            Refresh_Next(false);
             if (Valid_Position(Vector2Int.zero) == false)
             {
                 print("GameOver");
@@ -267,32 +275,57 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void Refresh_Next()
+    public void Refresh_Next(bool init)
     {
-        for (int i = 0; i < this.next_board.transform.childCount; i++)
+        for (int i = 1; i < this.next_board.transform.childCount; i++)
         {
             GameObject child_tile = this.next_board.transform.GetChild(i).GetChild(0).GetChild(0).gameObject;
+            GameObject child_X = this.next_board.transform.GetChild(i).GetChild(3).gameObject;
+            GameObject child_count = this.next_board.transform.GetChild(i).GetChild(4).gameObject;
             if (child_tile.transform.childCount != 0)
             {
                 Clear_Mino(child_tile.transform.GetChild(0).GetComponent<Piece>().mino_list, false, child_tile.GetComponent<Tilemap>());
                 Destroy(child_tile.transform.GetChild(0).gameObject);
             }
 
-            if (i == this.deck.Current_Deck.Count)
+            if (i-1 < this.deck.Current_Deck.Count)
             {
-                this.next_board.transform.GetChild(i).GetChild(3).gameObject.SetActive(true);
-            }
-            else if (i < this.deck.Current_Deck.Count)
-            {
-                this.next_board.transform.GetChild(i).GetChild(3).gameObject.SetActive(false);
-                Piece p = Instantiate(this.deck.Current_Deck[i], child_tile.transform);
+                child_X.SetActive(false);
+                if (!init && i + 1 < this.next_board.transform.childCount && this.next_board.transform.GetChild(i + 1).GetChild(4).gameObject.activeSelf)
+                {
+                    child_count.GetComponent<TextMeshPro>().text = this.next_board.transform.GetChild(i + 1).GetChild(4).GetComponent<TextMeshPro>().text;
+                    child_count.SetActive(true);
+                }
+                else
+                    child_count.SetActive(false);
+                Piece p = Instantiate(this.deck.Current_Deck[i-1], child_tile.transform);
                 Set_Mino(p.mino_list, false, child_tile.GetComponent<Tilemap>());
+            }
+            else if (i - 1 == this.deck.Current_Deck.Count)
+            {
+                
+                if (this.deck.Reload_Count > 0)
+                {
+                    this.deck.Shuffle();
+                    child_count.GetComponent<TextMeshPro>().text = this.deck.Reload_Count.ToString();
+                    child_count.SetActive(true);
+                    Piece p = Instantiate(this.deck.Current_Deck[i - 1], child_tile.transform);
+                    Set_Mino(p.mino_list, false, child_tile.GetComponent<Tilemap>());
+                    child_X.SetActive(false);
+                }
+                else
+                {
+                    child_X.SetActive(true);
+                    child_count.GetComponent<TextMeshPro>().text = "X";
+                }
             }
             else
             {
-                this.next_board.transform.GetChild(i).GetChild(3).gameObject.SetActive(false);
+                child_count.SetActive(false);
+                child_X.SetActive(true);
             }
         }
+        this.next_board.transform.GetChild(0).GetChild(0).GetComponent<TextMeshPro>().text = this.deck.Reload_Count.ToString();
     }
 
     public void Stop_Piece()
@@ -308,10 +341,27 @@ public class Board : MonoBehaviour
         this.Current_Piece.spin_index = 0;
         if (tile_board.transform.childCount != 0)
             Destroy(tile_board.transform.GetChild(0).gameObject);
-        Generate_Piece(deck.Pop_Piece());
+        Piece temp_p = this.deck.Pop_Piece();
+        Generate_Piece(temp_p == null ? Pop_Hold() : temp_p);
         this.is_floor = -1;
     }
 
+    public Piece Pop_Hold()
+    {
+        if (this.Hold_Pieces.Count > 0)
+        {
+            Piece p = this.Hold_Pieces[0];
+            Clear_Mino(p.mino_list, false, this.hold_board);
+            Destroy(this.hold_board.transform.GetChild(0).gameObject);
+            this.Hold_Pieces.RemoveAt(0);
+            if (this.Hold_Pieces.Count > 0)
+            {
+                Set_Mino(this.Hold_Pieces[0].mino_list, false, this.hold_board);
+            }
+            return p;
+        }
+        return null;
+    }
 
     public bool Valid_Position(Vector2Int transition)
     {
@@ -438,7 +488,7 @@ public class Board : MonoBehaviour
 
     public void Hold(InputAction.CallbackContext context)
     {
-        if (this.is_game && this.is_holdable > 0 && context.started)
+        if (this.is_game && this.is_holdable > 0 && context.started && !(this.Hold_Pieces.Count == 0 && this.deck.Current_Deck.Count == 0))
         {
             this.is_holdable--;
             Clear_Mino(this.Current_Piece.mino_list, true, this.tile_board);
@@ -449,12 +499,10 @@ public class Board : MonoBehaviour
                 Destroy(tile_board.transform.GetChild(0).gameObject);
             if (this.Hold_Pieces.Count < Global.is_hold_count + 1)
             {
-                print("Add tile");
                 Generate_Piece(this.deck.Pop_Piece());
             }
             else
             {
-                print("Clear tile");
                 Generate_Piece(this.Hold_Pieces[0]);
                 Clear_Mino(this.Hold_Pieces[0].mino_list, false, this.hold_board);
                 Destroy(this.hold_board.transform.GetChild(0).gameObject);

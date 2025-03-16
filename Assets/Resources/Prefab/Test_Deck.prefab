@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b050209c9fb73e74397ed3877d689229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Reload_Count: 5
   Deck_Data:
   - {fileID: 7446374094820345302, guid: ed35a3727760ecc42ac8c093ae6c42f6, type: 3}
   - {fileID: 6623416919954938991, guid: 8b19eeee95bc72542b133ae108a57031, type: 3}

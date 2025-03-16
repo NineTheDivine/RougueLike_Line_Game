@@ -5,6 +5,7 @@ using UnityEngine.Assertions;
 
 public class Deck : MonoBehaviour
 {
+    public int Reload_Count;
     [SerializeField]
     private List<Piece> Deck_Data;
     [SerializeField]
@@ -18,21 +19,21 @@ public class Deck : MonoBehaviour
             Current_Deck.RemoveRange(0, 1);
         }
 
-        if (!Current_Deck.Any())
+        if (Reload_Count > 0 && !Current_Deck.Any())
         {
             Shuffle();
         }
-        Assert.IsNotNull(t);
         return t;
     }
     public void Awake()
     {
-        if(this.Current_Deck.Count == 0)
+        this.Reload_Count = Global.base_reload_count;
+        if (this.Current_Deck.Count == 0)
             Shuffle();
     }
-    private void Shuffle()
+    public void Shuffle()
     {
-        Assert.IsTrue(this.Current_Deck.Count == 0, "Shuffling non empty Current Deck");
+        this.Reload_Count--;
         List<Piece> temp_deck = new List<Piece>(Deck_Data);
         for (int i = Random.Range(0, temp_deck.Count()); temp_deck.Count() != 0; i = Random.Range(0, temp_deck.Count()))
         {

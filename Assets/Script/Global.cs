@@ -12,6 +12,7 @@ public static class Global
     public static int floor_delay = 40;
 
     public static int is_hold_count = 1;
+    public static int base_reload_count = 5;
     public static void Add_Grid_X(int dx)
     {
         int temp = grid_x + dx;
