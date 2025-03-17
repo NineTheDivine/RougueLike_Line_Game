@@ -17,6 +17,9 @@ public class Board : MonoBehaviour
     public Deck deck;
 
     public Tilemap tile_board;
+    public Tilemap ghost_board;
+    private Piece ghost_piece_visualize;
+    private Tile ghost_tile;
     public Tilemap hold_board;
     public GameObject next_board;
     private Vector3Int spawn_loc;
@@ -41,6 +44,7 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
+        ghost_tile = Resources.Load<Tile>("Prefab/Mino/Puzzle_Block_Transparent_0");
         this.is_game = true;
         grid_array = new Mino[Global.grid_x, Global.grid_y + 2];
         max_level = 5;
@@ -97,6 +101,7 @@ public class Board : MonoBehaviour
         this.Current_Piece = null;
         this.Hold_Pieces = new List<Piece>();
         Generate_Piece(deck.Pop_Piece());
+
     }
 
     private void FixedUpdate()
@@ -110,7 +115,7 @@ public class Board : MonoBehaviour
                 this.y_counter = 0;
                 if (Valid_Position(Vector2Int.down))
                 {
-                    Clear_Mino(this.Current_Piece.mino_list, true, this.tile_board);
+                    Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
                     this.Current_Piece.piece_pos += Vector2Int.down;
                     this.moved_this_frame = true;
                 }
@@ -122,7 +127,7 @@ public class Board : MonoBehaviour
             {
                 if ((this.x_counter == -Global.update_delay_x || this.x_counter == 0) && Valid_Position(this.x_axis))
                 {
-                    Clear_Mino(this.Current_Piece.mino_list, true, this.tile_board);
+                    Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
                     this.Current_Piece.piece_pos += x_axis;
                     this.moved_this_frame = true;
                 }
@@ -156,7 +161,10 @@ public class Board : MonoBehaviour
         if (this.is_game)
         {
             if (this.moved_this_frame || this.spined_this_frame)
+            {
+                Update_Ghost(false, this.spined_this_frame, this.x_axis);
                 Set_Mino(this.Current_Piece.mino_list, true, this.tile_board);
+            }
 
             if (this.is_floor >= Global.floor_delay || (this.drop_reset_count >= 10 && !Valid_Position(Vector2Int.down)))
             {
@@ -215,8 +223,41 @@ public class Board : MonoBehaviour
             }
             else
             {
+                Update_Ghost(true, false, Vector2Int.zero);
                 Set_Mino(this.Current_Piece.mino_list, true, this.tile_board);
             }
+        }
+    }
+
+    public void Update_Ghost(bool is_changed, bool is_spin, Vector2Int movement)
+    {
+        if (!is_changed && !is_spin && movement.x == 0)
+            return;
+        if (this.ghost_piece_visualize != null)
+        {
+            Clear_Mino(this.ghost_piece_visualize.mino_list, this.ghost_piece_visualize.piece_pos, ghost_board);
+        }
+        if (this.Current_Piece == null)
+            return;
+
+        if (is_changed)
+        {
+            if (ghost_board.transform.childCount != 0)
+                Destroy(ghost_board.transform.GetChild(0).gameObject);
+            this.ghost_piece_visualize = Instantiate(this.Current_Piece, ghost_board.transform);
+        }
+        this.ghost_piece_visualize.Copy(this.Current_Piece);
+
+        if (ghost_piece_visualize.mino_list[0].m_type == Mino_Type.Ghost)
+            return;
+
+        while (Valid_Position(Vector2Int.down, this.ghost_piece_visualize))
+            this.ghost_piece_visualize.piece_pos += Vector2Int.down;
+
+        for (int i = 0; i < this.ghost_piece_visualize.mino_list.Length; i++)
+        {
+            if (this.ghost_piece_visualize.mino_list[i].pos.y < Global.grid_y / 2)
+                ghost_board.SetTile((Vector3Int)this.ghost_piece_visualize.piece_pos + (Vector3Int)this.ghost_piece_visualize.mino_list[i].pos, ghost_tile);
         }
     }
 
@@ -230,14 +271,11 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void Clear_Mino(Mino[] mino_list, bool is_current, Tilemap tilemap)
+    public void Clear_Mino(Mino[] mino_list, Vector2Int p_pos, Tilemap tilemap)
     {
-        Vector2Int global_idx = new Vector2Int(Global.grid_x / 2, Global.grid_y / 2);
-        Vector3Int p_pos = (is_current ? (Vector3Int)this.Current_Piece.piece_pos : Vector3Int.zero);
-
         for (int i = 0; i < mino_list.Length; i++)
         {
-            tilemap.SetTile((Vector3Int)mino_list[i].pos + p_pos, null);
+            tilemap.SetTile((Vector3Int)mino_list[i].pos + (Vector3Int)p_pos, null);
         }
     }
     /*
@@ -304,7 +342,7 @@ public class Board : MonoBehaviour
             GameObject child_count = this.next_board.transform.GetChild(i).GetChild(4).gameObject;
             if (child_tile.transform.childCount != 0)
             {
-                Clear_Mino(child_tile.transform.GetChild(0).GetComponent<Piece>().mino_list, false, child_tile.GetComponent<Tilemap>());
+                Clear_Mino(child_tile.transform.GetChild(0).GetComponent<Piece>().mino_list, Vector2Int.zero, child_tile.GetComponent<Tilemap>());
                 Destroy(child_tile.transform.GetChild(0).gameObject);
             }
 
@@ -375,7 +413,7 @@ public class Board : MonoBehaviour
         if (this.Hold_Pieces.Count > 0)
         {
             Piece p = this.Hold_Pieces[0];
-            Clear_Mino(p.mino_list, false, this.hold_board);
+            Clear_Mino(p.mino_list, Vector2Int.zero, this.hold_board);
             Destroy(this.hold_board.transform.GetChild(0).gameObject);
             this.Hold_Pieces.RemoveAt(0);
             if (this.Hold_Pieces.Count > 0)
@@ -403,6 +441,19 @@ public class Board : MonoBehaviour
                     return false;
                 }
             }
+        }
+        return true;
+    }
+
+    public bool Valid_Position(Vector2Int transition, Piece p)
+    {
+        for (int i = 0; i < p.block_count; i++)
+        {
+            Vector2Int position = p.piece_pos + p.mino_list[i].pos + transition;
+            if (position.x < -Global.grid_x / 2 || position.x >= Global.grid_x / 2 || position.y < -Global.grid_y / 2 || position.y >= (Global.grid_y / 2 + 2))
+                return false;
+            if (grid_array[position.x + Global.grid_x / 2, position.y + Global.grid_y / 2] != null)
+                return false;
         }
         return true;
     }
@@ -464,7 +515,7 @@ public class Board : MonoBehaviour
             if (is_spin)
             {
                 this.spined_this_frame = true;
-                Clear_Mino(this.Current_Piece.mino_list, true, this.tile_board);
+                Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
                 this.Current_Piece.piece_pos += wallkick;
                 this.Current_Piece.spin_index = temp_spin;
                 for (int i = 0; i < this.Current_Piece.block_count; i++)
@@ -514,9 +565,8 @@ public class Board : MonoBehaviour
     {
         if (this.is_game && context.started)
         {
-            Clear_Mino(this.Current_Piece.mino_list, true, this.tile_board);
-            while (Valid_Position(Vector2Int.down))
-                this.Current_Piece.piece_pos += Vector2Int.down;
+            Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
+            this.Current_Piece.piece_pos = ghost_piece_visualize.piece_pos;
             this.moved_this_frame = true;
             this.is_floor = Global.floor_delay;
         }
@@ -539,7 +589,7 @@ public class Board : MonoBehaviour
         if (this.is_game && this.is_holdable > 0 && context.started && !(this.Hold_Pieces.Count == 0 && this.deck.Current_Deck.Count == 0))
         {
             this.is_holdable--;
-            Clear_Mino(this.Current_Piece.mino_list, true, this.tile_board);
+            Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
             this.Current_Piece.Reset();
             Piece p = Instantiate(this.Current_Piece, this.hold_board.transform);
             this.Hold_Pieces.Add(p);
@@ -552,7 +602,7 @@ public class Board : MonoBehaviour
             else
             {
                 Generate_Piece(this.Hold_Pieces[0]);
-                Clear_Mino(this.Hold_Pieces[0].mino_list, false, this.hold_board);
+                Clear_Mino(this.Hold_Pieces[0].mino_list, Vector2Int.zero, this.hold_board);
                 Destroy(this.hold_board.transform.GetChild(0).gameObject);
                 this.Hold_Pieces.RemoveAt(0);
             }
@@ -571,7 +621,7 @@ public class Board : MonoBehaviour
             this.drop_speed = Global.update_delay_y / (this.level * 2);
             if (tile_board.transform.childCount != 0)
             {
-                Clear_Mino(this.Current_Piece.mino_list, true, this.tile_board);
+                Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
                 Destroy(tile_board.transform.GetChild(0).gameObject);
             }
             Generate_Piece(deck.Pop_Piece());
