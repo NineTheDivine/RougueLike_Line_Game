@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -14,7 +15,6 @@ public class Board : MonoBehaviour
     public GameObject inner_horizontal_line;
     public GameObject inner_vertical_line;
 
-    public Deck deck;
 
     public Tilemap tile_board;
     public Tilemap ghost_board;
@@ -28,7 +28,6 @@ public class Board : MonoBehaviour
 
     private Piece Current_Piece;
     private List<Piece> Hold_Pieces;
-    private bool is_game;
     public int level;
     private int max_level;
     private int drop_speed;
@@ -45,30 +44,13 @@ public class Board : MonoBehaviour
     private void Awake()
     {
         ghost_tile = Resources.Load<Tile>("Prefab/Mino/Puzzle_Block_Transparent_0");
-        this.is_game = true;
         grid_array = new Mino[Global.grid_x, Global.grid_y + 2];
         max_level = 5;
-        x_axis = Vector2Int.zero;
-        x_counter = -Global.update_delay_x;
-        y_counter = 0;
-        is_down = false;
-        is_floor = -1;
-        is_holdable = Global.is_hold_count;
-        moved_this_frame = false;
-        spined_this_frame = false;
-        drop_reset_count = 0;
-    }
-
-    void Start()
-    {
-        if (this.level <= 0 || this.level > max_level)
-            this.level = 1;
-        this.drop_speed = Global.update_delay_y / (this.level * 2);
+        this.Hold_Pieces = new List<Piece>();
         float outer_grid_size = 0.25f / Global.scale_background;
         float inner_grid_size = 0.1f / Global.scale_background;
 
-        deck = Instantiate(deck);
-        this.spawn_loc = new Vector3Int(0, Global.grid_y/2 - 2, 0);
+        this.spawn_loc = new Vector3Int(0, Global.grid_y / 2 - 2, 0);
         Transform out_parent = GameObject.Find("Outer_Line").transform;
         for (int i = -1; i < 2; i += 2)
         {
@@ -78,89 +60,105 @@ public class Board : MonoBehaviour
             temp_h.transform.parent = out_parent;
             GameObject temp_v = Instantiate(outer_vertical_line);
             temp_v.GetComponent<Transform>().position = new Vector3(Global.grid_x / 2 * i, 0, 0);
-            temp_v.GetComponent<Transform>().localScale = new Vector3(outer_grid_size, Global.grid_y , 1);
+            temp_v.GetComponent<Transform>().localScale = new Vector3(outer_grid_size, Global.grid_y, 1);
             temp_v.transform.parent = out_parent;
         }
         Transform in_parent = GameObject.Find("Inner_Line").transform;
         for (int i = -Global.grid_y / 2 + 1; i < Global.grid_y / 2; i++)
         {
             GameObject temp_h = Instantiate(inner_horizontal_line);
-            temp_h.GetComponent<Transform>().position = new Vector3(0, i , 0);
-            temp_h.GetComponent<Transform>().localScale = new Vector3(Global.grid_x  + inner_grid_size, inner_grid_size, 1);
+            temp_h.GetComponent<Transform>().position = new Vector3(0, i, 0);
+            temp_h.GetComponent<Transform>().localScale = new Vector3(Global.grid_x + inner_grid_size, inner_grid_size, 1);
             temp_h.transform.parent = in_parent;
         }
         for (int i = -Global.grid_x / 2 + 1; i < Global.grid_x / 2; i++)
         {
             GameObject temp_v = Instantiate(inner_vertical_line);
             temp_v.GetComponent<Transform>().position = new Vector3(i, 0, 0);
-            temp_v.GetComponent<Transform>().localScale = new Vector3(inner_grid_size, Global.grid_y , 1);
+            temp_v.GetComponent<Transform>().localScale = new Vector3(inner_grid_size, Global.grid_y, 1);
             temp_v.transform.parent = in_parent;
         }
-        Refresh_Next(true);
-        this.GameObject().GetComponent<Transform>().localScale = new Vector3(Global.scale_background, Global.scale_background, 1.0f);
         this.Current_Piece = null;
-        this.Hold_Pieces = new List<Piece>();
-        Generate_Piece(deck.Pop_Piece());
+    }
 
+    void Start()
+    {
+        x_axis = Vector2Int.zero;
+        x_counter = -Global.update_delay_x;
+        y_counter = 0;
+        is_down = false;
+        is_floor = -1;
+        is_holdable = GameManager.is_hold_count;
+        moved_this_frame = false;
+        spined_this_frame = false;
+        drop_reset_count = 0;
+        if (this.level <= 0 || this.level > max_level)
+            this.level = 1;
+        this.drop_speed = Global.update_delay_y / (this.level * 2);
+        Refresh_Board();
+        Refresh_Next(true);
     }
 
     private void FixedUpdate()
     {
-        if (this.is_game)
+        this.moved_this_frame = false;
+        this.spined_this_frame = false;
+        if (this.Current_Piece == null)
         {
-            this.moved_this_frame = false;
-            this.spined_this_frame = false;
-            if (this.is_floor == -1 && this.y_counter >= this.drop_speed)
-            {
-                this.y_counter = 0;
-                if (Valid_Position(Vector2Int.down))
-                {
-                    Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
-                    this.Current_Piece.piece_pos += Vector2Int.down;
-                    this.moved_this_frame = true;
-                }
-                else
-                    this.is_floor = 0;
-            }
-
-            if (this.x_axis != Vector2Int.zero)
-            {
-                if ((this.x_counter == -Global.update_delay_x || this.x_counter == 0) && Valid_Position(this.x_axis))
-                {
-                    Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
-                    this.Current_Piece.piece_pos += x_axis;
-                    this.moved_this_frame = true;
-                }
-                this.x_counter++;
-                if (this.x_counter >= Global.update_delay_x)
-                {
-                    this.x_counter = 0;
-                }
-            }
-
-            if (this.is_floor >= 0)
-            {
-                if (Valid_Position(Vector2Int.down))
-                {
-                    this.drop_reset_count++;
-                    this.is_floor = -1;
-                }
-                else
-                    this.is_floor++;
-            }
-
-            else if (this.is_down)
-                this.y_counter += max_level;
-            else
-                this.y_counter++;
+            Piece temp_p = GameManager.deck.Pop_Piece();
+            Generate_Piece(temp_p == null ? Pop_Hold() : temp_p);
+            this.moved_this_frame = true;
         }
+        if (this.is_floor == -1 && this.y_counter >= this.drop_speed)
+        {
+            this.y_counter = 0;
+            if (Valid_Position(Vector2Int.down))
+            {
+                Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
+                this.Current_Piece.piece_pos += Vector2Int.down;
+                this.moved_this_frame = true;
+            }
+            else
+                this.is_floor = 0;
+        }
+
+        if (this.x_axis != Vector2Int.zero)
+        {
+            if ((this.x_counter == -Global.update_delay_x || this.x_counter == 0) && Valid_Position(this.x_axis))
+            {
+                Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
+                this.Current_Piece.piece_pos += x_axis;
+                this.moved_this_frame = true;
+            }
+            this.x_counter++;
+            if (this.x_counter >= Global.update_delay_x)
+            {
+                this.x_counter = 0;
+            }
+        }
+
+        if (this.is_floor >= 0)
+        {
+            if (Valid_Position(Vector2Int.down))
+            {
+                this.drop_reset_count++;
+                this.is_floor = -1;
+            }
+            else
+                this.is_floor++;
+        }
+
+        else if (this.is_down)
+            this.y_counter += max_level;
+        else
+            this.y_counter++;
     }
 
     private void LateUpdate()
     {
-        if (this.is_game)
+        if (GameManager.Current_GameState == GameState.InPlay_Board)
         {
-            if (this.moved_this_frame || this.spined_this_frame)
+            if (this.Current_Piece != null && (this.moved_this_frame || this.spined_this_frame))
             {
                 Update_Ghost(false, this.spined_this_frame, this.x_axis);
                 Set_Mino(this.Current_Piece.mino_list, true, this.tile_board);
@@ -169,6 +167,7 @@ public class Board : MonoBehaviour
             if (this.is_floor >= Global.floor_delay || (this.drop_reset_count >= 10 && !Valid_Position(Vector2Int.down)))
             {
                 Stop_Piece();
+                this.Current_Piece = null;
                 int current_score = 0;
                 for (int i = 0; i < Global.grid_y + 2; i++)
                 {
@@ -184,20 +183,29 @@ public class Board : MonoBehaviour
                 {
                     Refresh_Board();
                     print(current_score);
+                    Level_Up();
                 }
-                this.is_holdable = Global.is_hold_count;
+                this.is_holdable = GameManager.is_hold_count;
             }
-
         }
     }
+
     public bool Level_Up()
     {
+        Update_Ghost(true, false, Vector2Int.zero);
         this.level++;
-        this.deck.Reload_Count += Global.base_reload_count;
+        GameManager.deck.Reload_Count += GameManager.base_reload_count;
         if (this.level > this.max_level)
+        {
+            GameManager.Current_GameState = GameState.StageClear;
+            GetComponentInParent<GameManager>().Invoke("Change_State", 0);
+            print("Stage Clear!");
             return true;
+        }
         this.drop_speed = Global.update_delay_y  / (this.level*2);
         Refresh_Next(false);
+        GameManager.Current_GameState = GameState.InPlay_PieceSelect;
+        GetComponentInParent<GameManager>().Invoke("Change_State", 0);
         return false;
     }
 
@@ -206,27 +214,27 @@ public class Board : MonoBehaviour
         if (p == null)
         {
             print("GameOver");
-            this.is_game = false;
+            GameManager.Current_GameState = GameState.GameOver;
+            GetComponentInParent<GameManager>().Invoke("Change_State", 0);
             return;
         }
-        if (this.is_game)
+        this.Current_Piece = Instantiate(p, tile_board.transform);
+        this.Current_Piece.piece_state = true;
+        this.Current_Piece.piece_pos = (Vector2Int)spawn_loc;
+        this.Current_Piece.spin_index = 0;
+        Refresh_Next(false);
+        if (Valid_Generation() == false)
         {
-            this.Current_Piece = Instantiate(p, tile_board.transform);
-            this.Current_Piece.piece_state = true;
-            this.Current_Piece.piece_pos = (Vector2Int)spawn_loc;
-            this.Current_Piece.spin_index = 0;
-            Refresh_Next(false);
-            if (Valid_Generation() == false)
-            {
-                print("GameOver");
-                this.is_game = false;
-            }
-            else
-            {
-                Update_Ghost(true, false, Vector2Int.zero);
-                Set_Mino(this.Current_Piece.mino_list, true, this.tile_board);
-            }
+            print("GameOver");
+            GameManager.Current_GameState = GameState.GameOver;
+            GetComponentInParent<GameManager>().Invoke("Change_State", 0);
         }
+        else
+        {
+            Update_Ghost(true, false, Vector2Int.zero);
+            Set_Mino(this.Current_Piece.mino_list, true, this.tile_board);
+        }
+        
     }
 
     public void Update_Ghost(bool is_changed, bool is_spin, Vector2Int movement)
@@ -346,7 +354,7 @@ public class Board : MonoBehaviour
                 Destroy(child_tile.transform.GetChild(0).gameObject);
             }
 
-            if (i-1 < this.deck.Current_Deck.Count)
+            if (i-1 < GameManager.deck.Current_Deck.Count)
             {
                 child_X.SetActive(false);
                 if (!init && i + 1 < this.next_board.transform.childCount && this.next_board.transform.GetChild(i + 1).GetChild(4).gameObject.activeSelf)
@@ -356,18 +364,18 @@ public class Board : MonoBehaviour
                 }
                 else
                     child_count.SetActive(false);
-                Piece p = Instantiate(this.deck.Current_Deck[i-1], child_tile.transform);
+                Piece p = Instantiate(GameManager.deck.Current_Deck[i-1], child_tile.transform);
                 Set_Mino(p.mino_list, false, child_tile.GetComponent<Tilemap>());
             }
-            else if (i - 1 == this.deck.Current_Deck.Count)
+            else if (i - 1 == GameManager.deck.Current_Deck.Count)
             {
                 
-                if (this.deck.Reload_Count > 0)
+                if (GameManager.deck.Reload_Count > 0)
                 {
-                    this.deck.Shuffle();
-                    child_count.GetComponent<TextMeshPro>().text = this.deck.Reload_Count.ToString();
+                    GameManager.deck.Shuffle();
+                    child_count.GetComponent<TextMeshPro>().text = GameManager.deck.Reload_Count.ToString();
                     child_count.SetActive(true);
-                    Piece p = Instantiate(this.deck.Current_Deck[i - 1], child_tile.transform);
+                    Piece p = Instantiate(GameManager.deck.Current_Deck[i - 1], child_tile.transform);
                     Set_Mino(p.mino_list, false, child_tile.GetComponent<Tilemap>());
                     child_X.SetActive(false);
                 }
@@ -383,7 +391,7 @@ public class Board : MonoBehaviour
                 child_X.SetActive(true);
             }
         }
-        this.next_board.transform.GetChild(0).GetChild(0).GetComponent<TextMeshPro>().text = this.deck.Reload_Count.ToString();
+        this.next_board.transform.GetChild(0).GetChild(0).GetComponent<TextMeshPro>().text = GameManager.deck.Reload_Count.ToString();
     }
 
     public void Stop_Piece()
@@ -402,8 +410,6 @@ public class Board : MonoBehaviour
         this.Current_Piece.piece_state = false;
         if (tile_board.transform.childCount != 0)
             Destroy(tile_board.transform.GetChild(0).gameObject);
-        Piece temp_p = this.deck.Pop_Piece();
-        Generate_Piece(temp_p == null ? Pop_Hold() : temp_p);
         this.is_floor = -1;
         this.drop_reset_count = 0;
     }
@@ -527,9 +533,9 @@ public class Board : MonoBehaviour
 
     public void Move_Left(InputAction.CallbackContext context)
     {
-        if (this.is_game && context.started)
+        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
             this.x_axis += Vector2Int.left;
-        else if (this.is_game && context.canceled)
+        else if (GameManager.Current_GameState == GameState.InPlay_Board && context.canceled)
         {
             this.x_axis -= Vector2Int.left;
             if (this.x_axis == Vector2Int.zero)
@@ -540,9 +546,9 @@ public class Board : MonoBehaviour
 
     public void Move_Right(InputAction.CallbackContext context)
     {
-        if (this.is_game && context.started)
+        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
             this.x_axis += Vector2Int.right;
-        else if (this.is_game && context.canceled)
+        else if (GameManager.Current_GameState == GameState.InPlay_Board && context.canceled)
         {
             this.x_axis -= Vector2Int.right;
             if(this.x_axis == Vector2Int.zero)
@@ -552,18 +558,18 @@ public class Board : MonoBehaviour
 
     public void Move_Down(InputAction.CallbackContext context)
     {
-        if (this.is_game && context.started)
+        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
         {
             this.y_counter = this.drop_speed;
             this.is_down = true;
         }
-        else if (this.is_game && context.canceled)
+        else if (GameManager.Current_GameState == GameState.InPlay_Board && context.canceled)
             this.is_down = false;
     }
     
     public void Hard_Drop(InputAction.CallbackContext context)
     {
-        if (this.is_game && context.started)
+        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
         {
             Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
             this.Current_Piece.piece_pos = ghost_piece_visualize.piece_pos;
@@ -574,19 +580,19 @@ public class Board : MonoBehaviour
 
     public void Rotate_Clockwise(InputAction.CallbackContext context)
     {
-        if (this.is_game && context.started)
+        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
             Valid_Spin(1);
     }
 
     public void Rotate_CounterClockwise(InputAction.CallbackContext context)
     {
-        if (this.is_game && context.started)
+        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
             Valid_Spin(-1);
     }
 
     public void Hold(InputAction.CallbackContext context)
     {
-        if (this.is_game && this.is_holdable > 0 && context.started && !(this.Hold_Pieces.Count == 0 && this.deck.Current_Deck.Count == 0))
+        if (GameManager.Current_GameState == GameState.InPlay_Board && this.is_holdable > 0 && context.started && !(this.Hold_Pieces.Count == 0 && GameManager.deck.Current_Deck.Count == 0))
         {
             this.is_holdable--;
             Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
@@ -595,9 +601,9 @@ public class Board : MonoBehaviour
             this.Hold_Pieces.Add(p);
             if (tile_board.transform.childCount != 0)
                 Destroy(tile_board.transform.GetChild(0).gameObject);
-            if (this.Hold_Pieces.Count < Global.is_hold_count + 1)
+            if (this.Hold_Pieces.Count < GameManager.is_hold_count + 1)
             {
-                Generate_Piece(this.deck.Pop_Piece());
+                Generate_Piece(GameManager.deck.Pop_Piece());
             }
             else
             {
@@ -616,7 +622,7 @@ public class Board : MonoBehaviour
     //Debug Function
     public void Gen(InputAction.CallbackContext context)
     {
-        if (this.is_game && context.started)
+        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
         {
             this.drop_speed = Global.update_delay_y / (this.level * 2);
             if (tile_board.transform.childCount != 0)
@@ -624,7 +630,7 @@ public class Board : MonoBehaviour
                 Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
                 Destroy(tile_board.transform.GetChild(0).gameObject);
             }
-            Generate_Piece(deck.Pop_Piece());
+            Generate_Piece(GameManager.deck.Pop_Piece());
             Set_Mino(this.Current_Piece.mino_list, true, this.tile_board);
             this.y_counter = 0;
             this.is_floor = -1;
@@ -638,7 +644,7 @@ public class Board : MonoBehaviour
             for (int i = 0; i < Global.grid_x; i++)
                 for (int j = 0; j < Global.grid_y + 2; j++)
                     if (grid_array[i, j] != null)
-                        print("x : " + i + " and y : " + j + "if filled");
+                        print("x : " + i + " and y : " + j + "is filled");
             print("=============================");
         }
     }

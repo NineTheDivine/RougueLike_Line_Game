@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Piece : MonoBehaviour
@@ -21,6 +22,24 @@ public class Piece : MonoBehaviour
     [SerializeField]
     public int spin_index;
 
+    public void Set_Piece_By_Name(string piece_name)
+    {
+        this.spin_index = 0;
+        this.piece_state = false;
+        this.piece_pos = Vector2Int.zero;
+        this.piece_name = piece_name;
+        Assert.True(Global.Piece_Data.ContainsKey(this.piece_name));
+        this.block_count = Global.Piece_Data[this.piece_name].Length;
+        this.mino_list = Global.Piece_Data[this.piece_name];
+
+        Assert.False(this.block_count == 0, "There is no mino in Piece");
+        Assert.True(this.block_count == this.mino_list.Length, "Invalid Mino List Length");
+        for (int i = 0; i < this.block_count; i++)
+        {
+            this.mino_list[i].pos = Global.Spin_Data[this.piece_name][this.spin_index, i];
+        }
+    }
+
     private void Awake()
     {
         Reset();
@@ -28,6 +47,8 @@ public class Piece : MonoBehaviour
 
     public void Reset()
     {
+        if (this.piece_name == null)
+            return;
         this.spin_index = 0;
         this.piece_pos = Vector2Int.zero;
         this.piece_state = false;

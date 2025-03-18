@@ -11,8 +11,7 @@ public static class Global
     public static int update_delay_y = 40;
     public static int floor_delay = 40;
 
-    public static int is_hold_count = 1;
-    public static int base_reload_count = 5;
+
     public static void Add_Grid_X(int dx)
     {
         int temp = grid_x + dx;
@@ -27,6 +26,14 @@ public static class Global
             grid_y = temp;
     }
 
+    public enum GameState
+    {
+        GameOver,
+        InPlay_Board,
+        InPlay_PieceSelect,
+        Pause,
+        StageClear,
+    }
     public enum Mino_Type
     {
         Normal,

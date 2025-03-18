@@ -2,123 +2,11 @@
     "name": "Input_Config",
     "maps": [
         {
-            "name": "UI",
-            "id": "4c10aeb5-7719-4f18-b02d-f1324dd576ff",
-            "actions": [
-                {
-                    "name": "Move",
-                    "type": "Button",
-                    "id": "7abcb70f-5dc3-4eb1-ab86-0c21db6e8665",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Select",
-                    "type": "Button",
-                    "id": "c9accf8b-36d3-47e4-8da8-e44940ed7afd",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Back",
-                    "type": "Button",
-                    "id": "9241bce8-39db-4865-b65e-ccca167ee6a8",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "2D Vector",
-                    "id": "2689a215-8096-46a1-ba5e-e8585cb92720",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "73a7ea36-e15e-4f8f-98e6-b25e2326f0bf",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PC",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "257f7194-5f61-446c-b408-9eebed19f1e7",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PC",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "92062327-0a48-44e4-b96f-1b25d47aa155",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PC",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "186309c6-5d7f-4e50-b818-9caf71e4aa2b",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PC",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "b9959551-cce0-4628-a19f-dbf3a77287af",
-                    "path": "<Keyboard>/enter",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PC",
-                    "action": "Select",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cbbafed2-f5ab-4428-be5a-2f3602aa796d",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";PC",
-                    "action": "Back",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "InGame",
+            "name": "InGame_Board",
             "id": "2aaff903-4d6f-4e36-baa4-d37fc3da65d2",
             "actions": [
                 {
-                    "name": "Hard_Drop",
+                    "name": "Up",
                     "type": "Button",
                     "id": "69ff2536-7c51-4706-ba11-76b32747a380",
                     "expectedControlType": "",
@@ -127,7 +15,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Soft_Drop",
+                    "name": "Down",
                     "type": "Button",
                     "id": "dd5166bc-30cc-47b1-8da5-a153503246b4",
                     "expectedControlType": "",
@@ -207,7 +95,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";PC",
-                    "action": "Hard_Drop",
+                    "action": "Up",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -218,7 +106,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";PC",
-                    "action": "Soft_Drop",
+                    "action": "Down",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
