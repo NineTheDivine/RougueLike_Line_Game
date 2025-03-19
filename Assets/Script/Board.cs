@@ -15,7 +15,6 @@ public class Board : MonoBehaviour
     public GameObject inner_horizontal_line;
     public GameObject inner_vertical_line;
 
-
     public Tilemap tile_board;
     public Tilemap ghost_board;
     private Piece ghost_piece_visualize;
@@ -40,6 +39,9 @@ public class Board : MonoBehaviour
     private int is_holdable;
     private bool moved_this_frame;
     private bool spined_this_frame;
+    private bool is_combo;
+
+    public ScoreManager scoreManager;
 
     private void Awake()
     {
@@ -79,6 +81,7 @@ public class Board : MonoBehaviour
             temp_v.transform.parent = in_parent;
         }
         this.Current_Piece = null;
+        this.is_combo = false;
     }
 
     void Start()
@@ -97,6 +100,7 @@ public class Board : MonoBehaviour
         this.drop_speed = Global.update_delay_y / (this.level * 2);
         Refresh_Board();
         Refresh_Next(true);
+        this.scoreManager.Level_Update(this.level, this.max_level);
     }
 
     private void FixedUpdate()
@@ -182,8 +186,31 @@ public class Board : MonoBehaviour
                 if (current_score != 0)
                 {
                     Refresh_Board();
-                    print(current_score);
-                    Level_Up();
+                    bool is_perfect_clear = true;
+                    foreach (Mino m in this.grid_array)
+                    {
+                        if (m != null)
+                        {
+                            is_perfect_clear = false;
+                            break;
+                        }
+                    }
+                    if (is_perfect_clear)
+                    {
+                        this.scoreManager.Score_PerfectClear(this.level);
+                    }
+
+                    this.scoreManager.Score_Full_Line(current_score, false, this.is_combo);
+                    this.is_combo = true;
+                    this.scoreManager.Score_Update();
+                    if (this.scoreManager.Score >= Global.TargetScore[this.level - 1])
+                        Level_Up();
+                }
+                else  if (this.is_combo == true)
+                {
+                    this.is_combo = false;
+                    this.scoreManager.Combo = 0;
+                    this.scoreManager.Score_Update();
                 }
                 this.is_holdable = GameManager.is_hold_count;
             }
@@ -202,6 +229,7 @@ public class Board : MonoBehaviour
             print("Stage Clear!");
             return true;
         }
+        this.scoreManager.Level_Update(this.level, this.max_level);
         this.drop_speed = Global.update_delay_y  / (this.level*2);
         Refresh_Next(false);
         GameManager.Current_GameState = GameState.InPlay_PieceSelect;

@@ -277,4 +277,52 @@ public static class Global
             }
         },
     };
+
+
+    public static readonly Dictionary<int, int> Score_Line_Data = new Dictionary<int, int>()
+    {
+        {0, 0},
+        {1,  100},
+        {2, 250},
+        {3, 400},
+        {4, 800},
+        {5, 1200}
+    };
+    
+    public static readonly Dictionary<int, int> Score_TSpin_Data = new Dictionary<int, int>()
+    {
+        {0, 0},
+        {1,  150},
+        {2, 400},
+        {3, 800}
+    };
+    public static readonly Dictionary<int, int> Score_Mino_Data = new Dictionary<int, int>()
+    {
+        {0, 50},
+        {10,  100},
+        {20, 200},
+        {30, 350}
+    };
+    public static readonly Dictionary<int, int> Score_B2B_Data = new Dictionary<int, int>()
+    {
+        {0, 0},
+        {2,  50},
+        {4, 100},
+        {6, 150},
+        {9, 250}
+    };
+    public static readonly Dictionary<int, float> Score_Combo_Data = new Dictionary<int, float>()
+    {
+        {0, 1.0f},
+        {2,  1.1f},
+        {4, 1.2f},
+        {6, 1.4f},
+        {8, 1.7f},
+        {11, 2.0f}
+    };
+
+    public static readonly int[] TargetScore = new int[]
+    {
+        1000, 3000, 6000, 10000, 15000, 20000, 30000, 50000, 75000, 100000 
+    };
 }

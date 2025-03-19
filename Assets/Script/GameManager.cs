@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
 
     
 
+    
+
     private void Awake()
     {
         this.current_piece_select = null;
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour
         Current_GameState = Global.GameState.InPlay_Board;
         deck = Instantiate(starter_deck);
         Invoke("Change_State", 0);
+
     }
 
     private void Update()
