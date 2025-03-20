@@ -40,9 +40,6 @@ public class GameManager : MonoBehaviour
 
     public void Change_State()
     {
-        print(Current_GameState);
-        
-
         if (Current_GameState == GameState.InPlay_PieceSelect)
         {
             this.current_piece_select = Instantiate(Piece_Select, this.transform);

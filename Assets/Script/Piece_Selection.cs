@@ -1,11 +1,9 @@
 using UnityEngine;
 using static Global;
 using UnityEngine.InputSystem;
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Tilemaps;
-using Unity.VisualScripting;
 
 public class Piece_Selection : MonoBehaviour
 {
@@ -63,11 +61,6 @@ public class Piece_Selection : MonoBehaviour
         this.GetComponentInParent<PlayerInput>().actions["Left"].started += this.Select_Left;
         this.GetComponentInParent<PlayerInput>().actions["Select"].started += this.Select_Confirm;
 
-    }
-
-    private void Update()
-    {
-        
     }
 
     private void Index_Change()

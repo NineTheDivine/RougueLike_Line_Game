@@ -1,8 +1,6 @@
-using NUnit.Framework;
+using UnityEngine.Assertions;
 using System.Collections.Generic;
-using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
@@ -666,7 +664,7 @@ public class Board : MonoBehaviour
         {
             this.is_holdable--;
             Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
-            this.Current_Piece.Reset();
+            this.Current_Piece.Revert();
             Piece p = Instantiate(this.Current_Piece, this.hold_board.transform);
             this.Hold_Pieces.Add(p);
             if (tile_board.transform.childCount != 0)

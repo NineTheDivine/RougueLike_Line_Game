@@ -1,4 +1,4 @@
-using NUnit.Framework;
+using UnityEngine.Assertions;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,7 +16,7 @@ public class Mino
         this.pos = pos;
         this.p_type = p_type;
         this.t_type = Global.Tile_Data[(this.m_type, this.p_type)];
-        Assert.True(this.t_type != null, "Tile data not found");
+        Assert.IsTrue(this.t_type != null, "Tile data not found");
     }
 
     public void Set_Color(Global.Piece_Type p)

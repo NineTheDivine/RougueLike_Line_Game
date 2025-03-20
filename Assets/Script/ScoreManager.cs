@@ -1,9 +1,6 @@
-using NUnit.Framework;
-using System.Collections.Generic;
+using UnityEngine.Assertions;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.UI;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
