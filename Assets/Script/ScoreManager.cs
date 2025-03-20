@@ -1,6 +1,8 @@
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.UI;
 using UnityEngine;
 
@@ -15,6 +17,7 @@ public class ScoreManager : MonoBehaviour
     public GameObject B2B_Text;
     public GameObject Combo_Text;
     public GameObject Level_Text;
+    public GameObject TSpin_Text;
 
     private void Awake()
     {
@@ -23,6 +26,9 @@ public class ScoreManager : MonoBehaviour
         this.B2B = 0;
 
         Score_Update();
+        Color TTextColor = TSpin_Text.GetComponent<TextMeshPro>().color;
+        TTextColor.a = 0.0f;
+        TSpin_Text.GetComponent<TextMeshPro>().color = TTextColor;
     }
 
     public int Score_PerfectClear(int current_level)
@@ -43,7 +49,17 @@ public class ScoreManager : MonoBehaviour
         float linescore = Global.Score_Line_Data[linecount] * multiplier_quadplus;
 
         if (is_TSpin)
+        {
+            if (TSpin_Text.GetComponentInParent<Animation>().isPlaying)
+                TSpin_Text.GetComponentInParent<Animation>().Stop();
+            string text = (linecount == 1 ? "Single" : (linecount == 2 ? "Double" : (linecount == 3 ? "Triple" : null)));
+            Assert.IsNotNull(text);
+            TSpin_Text.GetComponent<TextMeshPro>().text = "T-Spin\n" + text;
+            TSpin_Text.GetComponentInParent<Animation>().Play("TSpinText_Invisible");
+
+
             linescore += Global.Score_TSpin_Data[linecount];
+        }
 
         if (linecount >= 4 || is_TSpin)
         {

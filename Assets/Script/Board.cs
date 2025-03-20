@@ -41,6 +41,8 @@ public class Board : MonoBehaviour
     private bool spined_this_frame;
     private bool is_combo;
 
+    private bool last_was_spin;
+
     public ScoreManager scoreManager;
 
     private void Awake()
@@ -94,6 +96,7 @@ public class Board : MonoBehaviour
         is_holdable = GameManager.is_hold_count;
         moved_this_frame = false;
         spined_this_frame = false;
+        this.last_was_spin = false;
         drop_reset_count = 0;
         if (this.level <= 0 || this.level > max_level)
             this.level = 1;
@@ -164,19 +167,27 @@ public class Board : MonoBehaviour
         {
             if (this.Current_Piece != null && (this.moved_this_frame || this.spined_this_frame))
             {
+                if (this.moved_this_frame)
+                    this.last_was_spin = false;
+                if (this.spined_this_frame)
+                    this.last_was_spin = true;
                 Update_Ghost(false, this.spined_this_frame, this.x_axis);
                 Set_Mino(this.Current_Piece.mino_list, true, this.tile_board);
             }
 
             if (this.is_floor >= Global.floor_delay || (this.drop_reset_count >= 10 && !Valid_Position(Vector2Int.down)))
             {
+                int is_TSpin = 0;
                 Stop_Piece();
-                this.Current_Piece = null;
                 int current_score = 0;
                 for (int i = 0; i < Global.grid_y + 2; i++)
                 {
                     if (Check_Line(i))
                     {
+                        if (is_TSpin == 0)
+                        {
+                            is_TSpin = Check_TSpin() ? 1 : -1;
+                        }
                         Clear_Line(i);
                         current_score++;
                         i--;
@@ -200,18 +211,23 @@ public class Board : MonoBehaviour
                         this.scoreManager.Score_PerfectClear(this.level);
                     }
 
-                    this.scoreManager.Score_Full_Line(current_score, false, this.is_combo);
+                    this.scoreManager.Score_Full_Line(current_score, (is_TSpin == 1 ? true : false), this.is_combo);
                     this.is_combo = true;
                     this.scoreManager.Score_Update();
                     if (this.scoreManager.Score >= Global.TargetScore[this.level - 1])
                         Level_Up();
+                    else
+                        this.Current_Piece = null;
                 }
                 else  if (this.is_combo == true)
                 {
                     this.is_combo = false;
                     this.scoreManager.Combo = 0;
                     this.scoreManager.Score_Update();
+                    this.Current_Piece = null;
                 }
+                else
+                    this.Current_Piece = null;
                 this.is_holdable = GameManager.is_hold_count;
             }
         }
@@ -354,6 +370,34 @@ public class Board : MonoBehaviour
         return true;
     }
 
+    public bool Check_TSpin()
+    {
+        if (this.last_was_spin == false)
+            return false;
+        Assert.IsNotNull(this.Current_Piece);
+        if (this.Current_Piece.piece_type != Global.Piece_Type.T)
+            return false;
+        for (int i = 0; i < this.Current_Piece.block_count; i++)
+        {
+            if (this.Current_Piece.mino_list[i].m_type == Mino_Type.Ghost)
+                return false;
+        }
+        int counter = 0;
+        for (int i = 0; i < 2; i++)
+        {
+            int x = this.Current_Piece.piece_pos.x + (i == 0 ? -1 : 1) + Global.grid_x/2;
+            for (int j = 0; j < 2; j++)
+            {
+                int y = this.Current_Piece.piece_pos.y + (j == 0 ? -1 : 1) + Global.grid_y/2;
+                if(y < 0 || y >= Global.grid_y+2 || x < 0 || x >= Global.grid_x)
+                    counter++;
+                else if (this.grid_array[x,y] != null)
+                    counter++;
+            }
+        }
+        return counter >= 3;
+    }
+
     public void Refresh_Board()
     {
         Vector3Int global_idx = new Vector3Int(Global.grid_x / 2, Global.grid_y / 2, 0);
@@ -434,8 +478,6 @@ public class Board : MonoBehaviour
             else if (this.Current_Piece.mino_list[i].m_type != Mino_Type.Ghost)
                 Assert.IsTrue(true, "Piece already positioned in " + position);
         }
-        this.Current_Piece.spin_index = 0;
-        this.Current_Piece.piece_state = false;
         if (tile_board.transform.childCount != 0)
             Destroy(tile_board.transform.GetChild(0).gameObject);
         this.is_floor = -1;
