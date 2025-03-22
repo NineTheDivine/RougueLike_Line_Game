@@ -592,9 +592,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 238a59fde8387d7449d7da500b36b4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Current_GameState: 0
   starter_deck: {fileID: 857135409828544012, guid: 9d968fbe6ebd6b5489c9c8b10df138da, type: 3}
   board: {fileID: 1334885708}
   Piece_Select: {fileID: 7852880829991281039, guid: a917e69f56edcf3409a831c906e9e941, type: 3}
+  GameOver: {fileID: 3221807781668497110, guid: cc4af5dcf289a5845910df2dc1ce9af1, type: 3}
 --- !u!4 &1998010707
 Transform:
   m_ObjectHideFlags: 0

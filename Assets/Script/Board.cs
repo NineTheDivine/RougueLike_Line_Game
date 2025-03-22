@@ -161,7 +161,7 @@ public class Board : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (GameManager.Current_GameState == GameState.InPlay_Board)
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board)
         {
             if (this.Current_Piece != null && (this.moved_this_frame || this.spined_this_frame))
             {
@@ -238,16 +238,14 @@ public class Board : MonoBehaviour
         GameManager.deck.Reload_Count += GameManager.base_reload_count;
         if (this.level > this.max_level)
         {
-            GameManager.Current_GameState = GameState.StageClear;
-            GetComponentInParent<GameManager>().Invoke("Change_State", 0);
+            this.GetComponentInParent<GameManager>().Change_State(GameManager.GameState.StageClear);
             print("Stage Clear!");
             return true;
         }
         this.scoreManager.Level_Update(this.level, this.max_level);
         this.drop_speed = Global.update_delay_y  / (this.level*2);
         Refresh_Next(false);
-        GameManager.Current_GameState = GameState.InPlay_PieceSelect;
-        GetComponentInParent<GameManager>().Invoke("Change_State", 0);
+        this.GetComponentInParent<GameManager>().Change_State(GameManager.GameState.InPlay_PieceSelect);
         return false;
     }
 
@@ -256,8 +254,7 @@ public class Board : MonoBehaviour
         if (p == null)
         {
             print("GameOver");
-            GameManager.Current_GameState = GameState.GameOver;
-            GetComponentInParent<GameManager>().Invoke("Change_State", 0);
+            this.GetComponentInParent<GameManager>().Change_State(GameManager.GameState.GameOver);
             return;
         }
         this.Current_Piece = Instantiate(p, tile_board.transform);
@@ -268,8 +265,7 @@ public class Board : MonoBehaviour
         if (Valid_Generation() == false)
         {
             print("GameOver");
-            GameManager.Current_GameState = GameState.GameOver;
-            GetComponentInParent<GameManager>().Invoke("Change_State", 0);
+            this.GetComponentInParent<GameManager>().Change_State(GameManager.GameState.GameOver);
         }
         else
         {
@@ -601,9 +597,9 @@ public class Board : MonoBehaviour
 
     public void Move_Left(InputAction.CallbackContext context)
     {
-        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board && context.started)
             this.x_axis += Vector2Int.left;
-        else if (GameManager.Current_GameState == GameState.InPlay_Board && context.canceled)
+        else if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board && context.canceled)
         {
             this.x_axis -= Vector2Int.left;
             if (this.x_axis == Vector2Int.zero)
@@ -614,9 +610,9 @@ public class Board : MonoBehaviour
 
     public void Move_Right(InputAction.CallbackContext context)
     {
-        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board && context.started)
             this.x_axis += Vector2Int.right;
-        else if (GameManager.Current_GameState == GameState.InPlay_Board && context.canceled)
+        else if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board && context.canceled)
         {
             this.x_axis -= Vector2Int.right;
             if(this.x_axis == Vector2Int.zero)
@@ -626,18 +622,18 @@ public class Board : MonoBehaviour
 
     public void Move_Down(InputAction.CallbackContext context)
     {
-        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board && context.started)
         {
             this.y_counter = this.drop_speed;
             this.is_down = true;
         }
-        else if (GameManager.Current_GameState == GameState.InPlay_Board && context.canceled)
+        else if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board && context.canceled)
             this.is_down = false;
     }
     
     public void Hard_Drop(InputAction.CallbackContext context)
     {
-        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board && context.started)
         {
             Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
             this.Current_Piece.piece_pos = ghost_piece_visualize.piece_pos;
@@ -648,19 +644,19 @@ public class Board : MonoBehaviour
 
     public void Rotate_Clockwise(InputAction.CallbackContext context)
     {
-        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board && context.started)
             Valid_Spin(1);
     }
 
     public void Rotate_CounterClockwise(InputAction.CallbackContext context)
     {
-        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board && context.started)
             Valid_Spin(-1);
     }
 
     public void Hold(InputAction.CallbackContext context)
     {
-        if (GameManager.Current_GameState == GameState.InPlay_Board && this.is_holdable > 0 && context.started && !(this.Hold_Pieces.Count == 0 && GameManager.deck.Current_Deck.Count == 0))
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board && this.is_holdable > 0 && context.started && !(this.Hold_Pieces.Count == 0 && GameManager.deck.Current_Deck.Count == 0))
         {
             this.is_holdable--;
             Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
@@ -690,7 +686,7 @@ public class Board : MonoBehaviour
     //Debug Function
     public void Gen(InputAction.CallbackContext context)
     {
-        if (GameManager.Current_GameState == GameState.InPlay_Board && context.started)
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_Board && context.started)
         {
             this.drop_speed = Global.update_delay_y / (this.level * 2);
             if (tile_board.transform.childCount != 0)

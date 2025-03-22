@@ -25,15 +25,6 @@ public static class Global
         if (temp >= 4 && temp <= 30)
             grid_y = temp;
     }
-
-    public enum GameState
-    {
-        GameOver,
-        InPlay_Board,
-        InPlay_PieceSelect,
-        Pause,
-        StageClear,
-    }
     public enum Mino_Type
     {
         Normal,

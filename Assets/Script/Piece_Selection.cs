@@ -83,7 +83,7 @@ public class Piece_Selection : MonoBehaviour
 
     public void Select_Right(InputAction.CallbackContext context)
     {
-        if (GameManager.Current_GameState == Global.GameState.InPlay_PieceSelect && context.started)
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_PieceSelect && context.started)
         {
             this.index++;
             if(this.index >= GameManager.piece_selection_number)
@@ -95,7 +95,7 @@ public class Piece_Selection : MonoBehaviour
 
     public void Select_Left(InputAction.CallbackContext context)
     {
-        if (GameManager.Current_GameState == Global.GameState.InPlay_PieceSelect && context.started)
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_PieceSelect && context.started)
         {
             this.index--;
             if (this.index < 0)
@@ -106,7 +106,7 @@ public class Piece_Selection : MonoBehaviour
 
     public void Select_Confirm(InputAction.CallbackContext context)
     {
-        if (GameManager.Current_GameState == Global.GameState.InPlay_PieceSelect && context.started)
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_PieceSelect && context.started)
         {
             GameManager.deck.From_Piece_To_Temp(this.pieces[index]);
             for (int i = 0; i < GameManager.piece_selection_number; i++)
@@ -119,8 +119,7 @@ public class Piece_Selection : MonoBehaviour
                     }
                 }
             }
-            GameManager.Current_GameState = Global.GameState.InPlay_Board;
-            GetComponentInParent<GameManager>().Invoke("Change_State", 0);
+            this.GetComponentInParent<GameManager>().Change_State(GameManager.GameState.InPlay_Board);
             Destroy(this);
         }
     }
