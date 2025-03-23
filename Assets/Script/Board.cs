@@ -21,6 +21,8 @@ public class Board : MonoBehaviour
     public GameObject next_board;
     private Vector3Int spawn_loc;
 
+    private bool init;
+
     private Mino[,] grid_array;
 
     private Piece Current_Piece;
@@ -45,6 +47,7 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
+        this.init = true;
         ghost_tile = Resources.Load<Tile>("Prefab/Mino/Puzzle_Block_Transparent_0");
         grid_array = new Mino[Global.grid_x, Global.grid_y + 2];
         max_level = 5;
@@ -100,7 +103,6 @@ public class Board : MonoBehaviour
             this.level = 1;
         this.drop_speed = Global.update_delay_y / (this.level * 2);
         Refresh_Board();
-        Refresh_Next(true);
         this.scoreManager.Level_Update(this.level, this.max_level);
     }
 
@@ -111,7 +113,9 @@ public class Board : MonoBehaviour
         if (this.Current_Piece == null)
         {
             Piece temp_p = GameManager.deck.Pop_Piece();
-            Generate_Piece(temp_p == null ? Pop_Hold() : temp_p);
+            if (Generate_Piece(temp_p == null ? Pop_Hold() : temp_p) == false)
+                return;
+            Refresh_Next();
             this.moved_this_frame = true;
         }
         if (this.is_floor == -1 && this.y_counter >= this.drop_speed)
@@ -169,8 +173,8 @@ public class Board : MonoBehaviour
                     this.last_was_spin = false;
                 if (this.spined_this_frame)
                     this.last_was_spin = true;
-                Update_Ghost(false, this.spined_this_frame, this.x_axis);
                 Set_Mino(this.Current_Piece.mino_list, true, this.tile_board);
+                Update_Ghost(false, this.spined_this_frame, this.x_axis);
             }
 
             if (this.is_floor >= Global.floor_delay || (this.drop_reset_count >= 10 && !Valid_Position(Vector2Int.down)))
@@ -244,33 +248,33 @@ public class Board : MonoBehaviour
         }
         this.scoreManager.Level_Update(this.level, this.max_level);
         this.drop_speed = Global.update_delay_y  / (this.level*2);
-        Refresh_Next(false);
         this.GetComponentInParent<GameManager>().Change_State(GameManager.GameState.InPlay_PieceSelect);
         return false;
     }
 
-    public void Generate_Piece(Piece p)
+    public bool Generate_Piece(Piece p)
     {
         if (p == null)
         {
             print("GameOver");
             this.GetComponentInParent<GameManager>().Change_State(GameManager.GameState.GameOver);
-            return;
+            return false;
         }
         this.Current_Piece = Instantiate(p, tile_board.transform);
         this.Current_Piece.piece_state = true;
         this.Current_Piece.piece_pos = (Vector2Int)spawn_loc;
         this.Current_Piece.spin_index = 0;
-        Refresh_Next(false);
         if (Valid_Generation() == false)
         {
             print("GameOver");
             this.GetComponentInParent<GameManager>().Change_State(GameManager.GameState.GameOver);
+            return false;
         }
         else
         {
             Update_Ghost(true, false, Vector2Int.zero);
             Set_Mino(this.Current_Piece.mino_list, true, this.tile_board);
+            return true;
         }
         
     }
@@ -407,7 +411,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void Refresh_Next(bool init)
+    public void Refresh_Next()
     {
         for (int i = 1; i < this.next_board.transform.childCount; i++)
         {
@@ -416,7 +420,7 @@ public class Board : MonoBehaviour
             GameObject child_count = this.next_board.transform.GetChild(i).GetChild(4).gameObject;
             if (child_tile.transform.childCount != 0)
             {
-                Clear_Mino(child_tile.transform.GetChild(0).GetComponent<Piece>().mino_list, Vector2Int.zero, child_tile.GetComponent<Tilemap>());
+                child_tile.GetComponent<Tilemap>().ClearAllTiles();
                 Destroy(child_tile.transform.GetChild(0).gameObject);
             }
 
@@ -425,7 +429,7 @@ public class Board : MonoBehaviour
                 child_X.SetActive(false);
                 if (!init && i + 1 < this.next_board.transform.childCount && this.next_board.transform.GetChild(i + 1).GetChild(4).gameObject.activeSelf)
                 {
-                    child_count.GetComponent<TextMeshPro>().text = this.next_board.transform.GetChild(i + 1).GetChild(4).GetComponent<TextMeshPro>().text;
+                    child_count.GetComponent<TextMeshPro>().text = GameManager.deck.Reload_Count.ToString();
                     child_count.SetActive(true);
                 }
                 else
@@ -458,6 +462,7 @@ public class Board : MonoBehaviour
             }
         }
         this.next_board.transform.GetChild(0).GetChild(0).GetComponent<TextMeshPro>().text = GameManager.deck.Reload_Count.ToString();
+        this.init = false;
     }
 
     public void Stop_Piece()
@@ -483,7 +488,7 @@ public class Board : MonoBehaviour
         if (this.Hold_Pieces.Count > 0)
         {
             Piece p = this.Hold_Pieces[0];
-            Clear_Mino(p.mino_list, Vector2Int.zero, this.hold_board);
+            this.hold_board.ClearAllTiles();
             Destroy(this.hold_board.transform.GetChild(0).gameObject);
             this.Hold_Pieces.RemoveAt(0);
             if (this.Hold_Pieces.Count > 0)
@@ -665,14 +670,10 @@ public class Board : MonoBehaviour
             this.Hold_Pieces.Add(p);
             if (tile_board.transform.childCount != 0)
                 Destroy(tile_board.transform.GetChild(0).gameObject);
-            if (this.Hold_Pieces.Count < GameManager.is_hold_count + 1)
-            {
-                Generate_Piece(GameManager.deck.Pop_Piece());
-            }
-            else
+            if(this.Hold_Pieces.Count >= GameManager.is_hold_count + 1)
             {
                 Generate_Piece(this.Hold_Pieces[0]);
-                Clear_Mino(this.Hold_Pieces[0].mino_list, Vector2Int.zero, this.hold_board);
+                this.hold_board.ClearAllTiles();
                 Destroy(this.hold_board.transform.GetChild(0).gameObject);
                 this.Hold_Pieces.RemoveAt(0);
             }

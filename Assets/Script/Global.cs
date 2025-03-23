@@ -58,6 +58,36 @@ public static class Global
 
     public static readonly Dictionary<string, Mino[]> Piece_Data = new Dictionary<string, Mino[]>()
     {
+        /*
+        //Duomino
+        { "Duomino",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.I),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.I),
+            }
+        },
+        */
+        /*
+        //Trimino
+        { "Trimino_I",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.I),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,1), Piece_Type.I),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,1), Piece_Type.I),
+            }
+        },
+        { "Triomino_V",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.L),
+            }
+        },
+        */
+        //Tetromino
         { "Tetromino_I", 
             new Mino[] 
             {
@@ -121,6 +151,190 @@ public static class Global
                 new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.Z),
             }
         },
+        /*
+        //Pentomino
+        { "Pentomino_I",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.I),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,1), Piece_Type.I),
+                new Mino(Mino_Type.Normal, new Vector2Int(-2,1), Piece_Type.I),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,1), Piece_Type.I),
+                new Mino(Mino_Type.Normal, new Vector2Int(2,1), Piece_Type.I),
+            }
+        },
+        { "Pentomino_T",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,2), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.T),
+            }
+        },
+        { "Pentomino_U",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,1), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,1), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.J),
+            }
+        },
+        { "Pentomino_V",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,1), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,2), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.L),
+            }
+        },
+        { "Pentomino_W",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,1), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,-1), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,-1), Piece_Type.Z),
+            }
+        },
+        { "Pentomino_X",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,-1), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.T),
+            }
+        },
+        { "Pentomino_F1",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,1), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,-1), Piece_Type.J),
+            }
+        },
+        { "Pentomino_F2",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,1), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,-1), Piece_Type.L),
+            }
+        },
+        { "Pentomino_S",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.S),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,1), Piece_Type.S),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.S),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.S),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,-1), Piece_Type.S),
+            }
+        },
+        { "Pentomino_Z",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,1), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,-1), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,-1), Piece_Type.Z),
+            }
+        },
+        { "Pentomino_J",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,1), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,2), Piece_Type.J),
+            }
+        },
+        { "Pentomino_L",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(2,1), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(2,0), Piece_Type.L),
+            }
+        },
+        { "Pentomino_Y1",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(2,0), Piece_Type.T),
+            }
+        },
+        { "Pentomino_Y2",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,1), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.T),
+                new Mino(Mino_Type.Normal, new Vector2Int(2,0), Piece_Type.T),
+            }
+        },
+        { "Pentomino_N1",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.S),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,1), Piece_Type.S),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.S),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.S),
+                new Mino(Mino_Type.Normal, new Vector2Int(-2,0), Piece_Type.S),
+            }
+        },
+        { "Pentomino_N2",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,1), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.Z),
+                new Mino(Mino_Type.Normal, new Vector2Int(2,0), Piece_Type.Z),
+            }
+        },
+        { "Pentomino_P",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,1), Piece_Type.J),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,2), Piece_Type.J),
+            }
+        },
+        { "Pentomino_Q",
+            new Mino[]
+            {
+                new Mino(Mino_Type.Normal, new Vector2Int(0,0), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(0,1), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,0), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(1,1), Piece_Type.L),
+                new Mino(Mino_Type.Normal, new Vector2Int(-1,0), Piece_Type.L),
+            }
+        },
+        */
+
     };
 
     public static readonly Dictionary<string, Vector2Int[,]> Spin_Data = new Dictionary<string, Vector2Int[,]>()

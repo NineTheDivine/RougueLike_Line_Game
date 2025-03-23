@@ -8,8 +8,11 @@ public class InPlay_Board : IState<GameManager>
     public void OperateEnter(GameManager sender)
     {
         _gameManager = sender;
-        if(_gameManager != null)
+        if (_gameManager != null)
+        {
             _gameManager.board.enabled = true;
+            _gameManager.board.Refresh_Next();
+        }
     }
     public void OperateExit(GameManager sender)
     {
