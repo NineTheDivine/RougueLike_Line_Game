@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2713588280775299391}
   - component: {fileID: 7852880829991281039}
+  - component: {fileID: 1608366562306969969}
   m_Layer: 0
   m_Name: Piece_Select
   m_TagString: Untagged
@@ -47,6 +48,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Selection_Board: {fileID: 1056842165325800415, guid: b2cd07cff81f4f74c96e8a8cf5000ab1, type: 3}
+--- !u!111 &1608366562306969969
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2893668290697949141}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: 6b4363d0922dfbb42b8b59a10ebf11c5, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &5657180344940046538
 GameObject:
   m_ObjectHideFlags: 0

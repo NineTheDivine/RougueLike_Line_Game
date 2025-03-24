@@ -10,9 +10,11 @@ public class Piece_Selection : MonoBehaviour
     private int index = 0;
     private Piece[] pieces;
     public GameObject Selection_Board;
+    private int _hirecky;
 
     private void Start()
     {
+        this._hirecky = 1;
         this.index = 0;
         List<int> Random_Index_Selection = new List<int>();
         pieces = new Piece[GameManager.piece_selection_number];
@@ -60,6 +62,12 @@ public class Piece_Selection : MonoBehaviour
         this.GetComponentInParent<PlayerInput>().actions["Right"].started += this.Select_Right;
         this.GetComponentInParent<PlayerInput>().actions["Left"].started += this.Select_Left;
         this.GetComponentInParent<PlayerInput>().actions["Select"].started += this.Select_Confirm;
+        /*
+        this.GetComponentInParent<PlayerInput>().actions["Hold"].started += this.Select_Inspect;
+        this.GetComponentInParent<PlayerInput>().actions["Back"].started += this.Select_Back;
+        this.GetComponentInParent<PlayerInput>().actions["Up"].started += this.Select_Hide;
+        this.GetComponentInParent<PlayerInput>().actions["Down"].started += this.Select_Show;
+        */
 
     }
 
@@ -124,10 +132,47 @@ public class Piece_Selection : MonoBehaviour
         }
     }
 
+    public void Select_Inspect(InputAction.CallbackContext context)
+    {
+
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_PieceSelect && context.started)
+        {
+        }
+    }
+
+    public void Select_Back(InputAction.CallbackContext context)
+    {
+
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_PieceSelect && context.started)
+        {
+        }
+    }
+    public void Select_Hide(InputAction.CallbackContext context)
+    {
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_PieceSelect && context.started && this.gameObject.activeSelf == true && !this.GetComponent<Animation>().isPlaying)
+        {
+
+        }
+    }
+    public void Select_Show(InputAction.CallbackContext context)
+    {
+        if (this.GetComponentInParent<GameManager>().Current_GameState == GameManager.GameState.InPlay_PieceSelect && context.started && this.gameObject.activeSelf == false && !this.GetComponent<Animation>().isPlaying)
+        {
+
+        }
+    }
+
+
     private void OnDestroy()
     {
         this.GetComponentInParent<PlayerInput>().actions["Right"].started -= this.Select_Right;
         this.GetComponentInParent<PlayerInput>().actions["Left"].started -= this.Select_Left;
         this.GetComponentInParent<PlayerInput>().actions["Select"].started -= this.Select_Confirm;
+        /*
+        this.GetComponentInParent<PlayerInput>().actions["Hold"].started -= this.Select_Inspect;
+        this.GetComponentInParent<PlayerInput>().actions["Back"].started -= this.Select_Back;
+        this.GetComponentInParent<PlayerInput>().actions["Up"].started -= this.Select_Hide;
+        this.GetComponentInParent<PlayerInput>().actions["Down"].started -= this.Select_Show;
+        */
     }
 }
