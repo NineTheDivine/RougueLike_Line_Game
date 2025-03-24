@@ -572,7 +572,6 @@ public class Board : MonoBehaviour
             temp_spin += size;
         if (temp_spin >= size)
             temp_spin %= size;
-        print(this.Current_Piece.spin_index + " To " + temp_spin);
         Vector2Int wallkick;
         for (int j = 0; j < Global.SRS_Data[this.Current_Piece.piece_type].GetLength(1); j++)
         {
@@ -597,12 +596,15 @@ public class Board : MonoBehaviour
             }
             if (is_spin)
             {
+                print("From " + this.Current_Piece.piece_pos);
                 this.spined_this_frame = true;
                 Clear_Mino(this.Current_Piece.mino_list, this.Current_Piece.piece_pos, this.tile_board);
                 this.Current_Piece.piece_pos += wallkick;
                 this.Current_Piece.spin_index = temp_spin;
                 for (int i = 0; i < this.Current_Piece.block_count; i++)
                     this.Current_Piece.mino_list[i].pos = Global.Spin_Data[this.Current_Piece.piece_name][temp_spin, i];
+                print("To " + this.Current_Piece.piece_pos);
+                print("==============");
                 return;
             }
         }
