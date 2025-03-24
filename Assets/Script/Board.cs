@@ -153,8 +153,15 @@ public class Board : MonoBehaviour
                 this.drop_reset_count++;
                 this.is_floor = -1;
             }
+            else if (moved_this_frame || spined_this_frame)
+            {
+                this.drop_reset_count++;
+                this.is_floor = 0;
+            }
             else
+            {
                 this.is_floor++;
+            }
         }
 
         else if (this.is_down)
@@ -174,8 +181,8 @@ public class Board : MonoBehaviour
                 if (this.spined_this_frame)
                     this.last_was_spin = true;
                 Set_Mino(this.Current_Piece.mino_list, true, this.tile_board);
-                Update_Ghost(false, this.spined_this_frame, this.x_axis);
             }
+            Update_Ghost(false, this.spined_this_frame, this.x_axis);
 
             if (this.is_floor >= Global.floor_delay || (this.drop_reset_count >= 10 && !Valid_Position(Vector2Int.down)))
             {
@@ -285,7 +292,7 @@ public class Board : MonoBehaviour
             return;
         if (this.ghost_piece_visualize != null)
         {
-            Clear_Mino(this.ghost_piece_visualize.mino_list, this.ghost_piece_visualize.piece_pos, ghost_board);
+            ghost_board.ClearAllTiles();
         }
         if (this.Current_Piece == null)
             return;
@@ -565,14 +572,15 @@ public class Board : MonoBehaviour
             temp_spin += size;
         if (temp_spin >= size)
             temp_spin %= size;
+        print(this.Current_Piece.spin_index + " To " + temp_spin);
         Vector2Int wallkick;
-        for (int j = 0; j < Global.Wallkick_Data[this.Current_Piece.piece_type].GetLength(1); j++)
+        for (int j = 0; j < Global.SRS_Data[this.Current_Piece.piece_type].GetLength(1); j++)
         {
             bool is_spin = true;
-            wallkick = Global.Wallkick_Data[this.Current_Piece.piece_type][this.Current_Piece.spin_index, j] * spin;
+            wallkick = Global.SRS_Data[this.Current_Piece.piece_type][this.Current_Piece.spin_index, j] - Global.SRS_Data[this.Current_Piece.piece_type][temp_spin, j];
             for (int i = 0; i < this.Current_Piece.block_count; i++)
             {
-                Vector2Int position = this.Current_Piece.piece_pos + Global.Spin_Data[this.Current_Piece.piece_name][temp_spin, i] + wallkick;
+                Vector2Int position = this.Current_Piece.piece_pos + wallkick + Global.Spin_Data[this.Current_Piece.piece_name][temp_spin, i];
                 if (position.x < -Global.grid_x / 2 || position.x >= Global.grid_x / 2 || position.y < -Global.grid_y / 2 || (position.y >= Global.grid_y / 2 + 2))
                 {
                     is_spin = false;
